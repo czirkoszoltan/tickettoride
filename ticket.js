@@ -15,9 +15,7 @@
  */
 function ticket_to_ride(routes) {
     var cities = create_cities();
-    cities.sort();
-    console.log(cities);
-    var neighbors = create_neighbors();
+    var double_neighbors = create_double_neighbors();
 
     const STATE_CLEAR = 0;
     const STATE_GENERATED = 1;
@@ -30,10 +28,13 @@ function ticket_to_ride(routes) {
     var random_ticket_2 = document.getElementById('random-ticket-2');
     var random_ticket_3 = document.getElementById('random-ticket-3');
     var tickets_button = document.getElementById('tickets-button');
+    var neighbors_button = document.getElementById('neighbors-button');
+    var random_section = document.getElementById('random-section');
     var steamwhistle = document.getElementById('steamwhistle');
     
     function create_cities() {
         var cities = [];
+
         for (var i = 0; i < routes.length; ++i) {
             var route = routes[i];
             if (route.from >= route.to) {
@@ -46,6 +47,8 @@ function ticket_to_ride(routes) {
             if (cities.indexOf(route.to) == -1)
                 cities.push(route.to);
         }
+        cities.sort();
+        
         return cities;
     }
     
@@ -53,13 +56,19 @@ function ticket_to_ride(routes) {
         return from + " – " + to;
     }
     
-    function create_neighbors() {
-        var neighbors = [];
+    function create_double_neighbors() {
+        var double_neighbors = [];
+        
+        var neighbors = {};
         for (var i = 0; i < routes.length; ++i) {
             var route = routes[i];
-            neighbors.push(city_pair_to_string(route.from, route.to));
+            var pair_str = city_pair_to_string(route.from, route.to);
+            neighbors[pair_str] = (neighbors[pair_str] || 0) + 1;
+            if (neighbors[pair_str] == 2)
+                double_neighbors.push(pair_str);
         }
-        return neighbors;
+
+        return double_neighbors;
     }
 
     function random_different(generator, count, avoid) {
@@ -67,6 +76,7 @@ function ticket_to_ride(routes) {
         var elements = [];
         while (elements.length < count) {
             var new_element = generator();
+            console.log("generator", new_element, elements, avoid, elements.indexOf(new_element) == -1, avoid.indexOf(new_element) == -1);
             if (elements.indexOf(new_element) == -1 && avoid.indexOf(new_element) == -1)
                 elements.push(new_element);
         }
@@ -83,8 +93,15 @@ function ticket_to_ride(routes) {
         pair.sort();    // mindig ábécében, hogy később ne lehessen "amsterdam-wien" és "wien-amsterdam" ticket
         return city_pair_to_string(pair[0], pair[1]);
     }
-
+    
+    function random_double_neighbor() {
+        var random_idx = Math.floor(Math.random() * double_neighbors.length);
+        return double_neighbors[random_idx];
+    }
+    
     function set_random_tickets() {
+        neighbors_button.style.display = 'none';
+        random_section.style.display = '';
         var tickets = random_different(random_city_pair, 3, to_build);
         random_ticket_1.setAttribute('data-ticket', tickets[0]);
         random_ticket_2.setAttribute('data-ticket', tickets[1]);
@@ -93,7 +110,7 @@ function ticket_to_ride(routes) {
         random_ticket_2.setAttribute('data-keep', '');
         random_ticket_3.setAttribute('data-keep', '');
     }
-
+    
     function clear_tickets() {
         random_ticket_1.setAttribute('data-ticket', '');
         random_ticket_2.setAttribute('data-ticket', '');
@@ -108,7 +125,24 @@ function ticket_to_ride(routes) {
         ];
         return tickets;
     }
-            
+    
+    function add_random_neighbor() {
+        tickets_button.style.display = 'none';
+        try {
+            if (to_build.length == double_neighbors.length) {
+                throw "No more routes";
+            }
+            if (Math.random() < 0.1) {
+                throw "No ticket for this turn"
+            }
+            var ticket = random_different(random_double_neighbor, 1, to_build)[0];
+            to_build.push(ticket);
+            add_build_div(ticket);
+        } catch (e) {
+            alert(e.toString());
+        }
+    }
+    
     function keep_button_value(button) {
         var keepstr = button.getAttribute('data-keep');
         if (keepstr === '1')
@@ -182,6 +216,7 @@ function ticket_to_ride(routes) {
     random_ticket_3.addEventListener('click', keep_button_click);
 
     tickets_button.addEventListener('click', tickets_button_click);
+    neighbors_button.addEventListener('click', add_random_neighbor);
 }
 
 function init() {
@@ -189,10 +224,15 @@ function init() {
     var play_game = document.getElementById('play-game');
     var map_usa = document.getElementById('map-usa');
     var map_eu = document.getElementById('map-eu');
+    var map_nl = document.getElementById('map-nl');
+    var random_section = document.getElementById('random-section');
+
     play_game.style.display = 'none';
+    random_section.style.display = 'none';
     
     map_usa.addEventListener('click', load_map.bind(null, 'map-usa.json'));
     map_eu.addEventListener('click', load_map.bind(null, 'map-eu.json'));
+    map_nl.addEventListener('click', load_map.bind(null, 'map-nl.json'));
     
     function load_map(filename) {
         function reqListener() {

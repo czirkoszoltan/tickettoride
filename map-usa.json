@@ -3,784 +3,588 @@
         "from": "Seattle",
         "to": "Vancouver",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Seattle",
         "to": "Vancouver",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Calgary",
         "to": "Vancouver",
         "length": 3,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Calgary",
         "to": "Seattle",
         "length": 4,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Portland",
         "to": "Seattle",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Portland",
         "to": "Seattle",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Helena",
         "to": "Seattle",
         "length": 6,
-        "color": "sarga",
-        "joker": 0,
-        "tunnel": false
+        "color": "sarga"
     },
     {
         "from": "Portland",
         "to": "San Francisco",
         "length": 5,
-        "color": "zold",
-        "joker": 0,
-        "tunnel": false
+        "color": "zold"
     },
     {
         "from": "Portland",
         "to": "San Francisco",
         "length": 5,
-        "color": "lila",
-        "joker": 0,
-        "tunnel": false
+        "color": "lila"
     },
     {
         "from": "Portland",
         "to": "Salt Lake City",
         "length": 6,
-        "color": "kek",
-        "joker": 0,
-        "tunnel": false
+        "color": "kek"
     },
     {
         "from": "Salt Lake City",
         "to": "San Francisco",
         "length": 5,
-        "color": "narancs",
-        "joker": 0,
-        "tunnel": false
+        "color": "narancs"
     },
     {
         "from": "Salt Lake City",
         "to": "San Francisco",
         "length": 5,
-        "color": "feher",
-        "joker": 0,
-        "tunnel": false
+        "color": "feher"
     },
     {
         "from": "Los Angeles",
         "to": "San Francisco",
         "length": 3,
-        "color": "lila",
-        "joker": 0,
-        "tunnel": false
+        "color": "lila"
     },
     {
         "from": "Los Angeles",
         "to": "San Francisco",
         "length": 3,
-        "color": "sarga",
-        "joker": 0,
-        "tunnel": false
+        "color": "sarga"
     },
     {
         "from": "Las Vegas",
         "to": "Los Angeles",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Los Angeles",
         "to": "Phoenix",
         "length": 3,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "El Paso",
         "to": "Los Angeles",
         "length": 6,
-        "color": "fekete",
-        "joker": 0,
-        "tunnel": false
+        "color": "fekete"
     },
     {
         "from": "Denver",
         "to": "Phoenix",
         "length": 5,
-        "color": "feher",
-        "joker": 0,
-        "tunnel": false
+        "color": "feher"
     },
     {
         "from": "Phoenix",
         "to": "Santa Fe",
         "length": 3,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "El Paso",
         "to": "Phoenix",
         "length": 3,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "El Paso",
         "to": "Santa Fe",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "El Paso",
         "to": "Oklahoma City",
         "length": 5,
-        "color": "sarga",
-        "joker": 0,
-        "tunnel": false
+        "color": "sarga"
     },
     {
         "from": "Dallas",
         "to": "El Paso",
         "length": 4,
-        "color": "piros",
-        "joker": 0,
-        "tunnel": false
+        "color": "piros"
     },
     {
         "from": "El Paso",
         "to": "Houston",
         "length": 6,
-        "color": "zold",
-        "joker": 0,
-        "tunnel": false
+        "color": "zold"
     },
     {
         "from": "Oklahoma City",
         "to": "Santa Fe",
         "length": 3,
-        "color": "kek",
-        "joker": 0,
-        "tunnel": false
+        "color": "kek"
     },
     {
         "from": "Calgary",
         "to": "Winnipeg",
         "length": 6,
-        "color": "feher",
-        "joker": 0,
-        "tunnel": false
+        "color": "feher"
     },
     {
         "from": "Calgary",
         "to": "Helena",
         "length": 4,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Helena",
         "to": "Winnipeg",
         "length": 4,
-        "color": "kek",
-        "joker": 0,
-        "tunnel": false
+        "color": "kek"
     },
     {
         "from": "Duluth",
         "to": "Helena",
         "length": 6,
-        "color": "narancs",
-        "joker": 0,
-        "tunnel": false
+        "color": "narancs"
     },
     {
         "from": "Helena",
         "to": "Omaha",
         "length": 5,
-        "color": "piros",
-        "joker": 0,
-        "tunnel": false
+        "color": "piros"
     },
     {
         "from": "Denver",
         "to": "Helena",
         "length": 4,
-        "color": "zold",
-        "joker": 0,
-        "tunnel": false
+        "color": "zold"
     },
     {
         "from": "Helena",
         "to": "Salt Lake City",
         "length": 3,
-        "color": "lila",
-        "joker": 0,
-        "tunnel": false
+        "color": "lila"
     },
     {
         "from": "Denver",
         "to": "Salt Lake City",
         "length": 3,
-        "color": "piros",
-        "joker": 0,
-        "tunnel": false
+        "color": "piros"
     },
     {
         "from": "Denver",
         "to": "Salt Lake City",
         "length": 3,
-        "color": "sarga",
-        "joker": 0,
-        "tunnel": false
+        "color": "sarga"
     },
     {
         "from": "Denver",
         "to": "Omaha",
         "length": 4,
-        "color": "lila",
-        "joker": 0,
-        "tunnel": false
+        "color": "lila"
     },
     {
         "from": "Denver",
         "to": "Kansas City",
         "length": 4,
-        "color": "fekete",
-        "joker": 0,
-        "tunnel": false
+        "color": "fekete"
     },
     {
         "from": "Denver",
         "to": "Kansas City",
         "length": 4,
-        "color": "narancs",
-        "joker": 0,
-        "tunnel": false
+        "color": "narancs"
     },
     {
         "from": "Denver",
         "to": "Oklahoma City",
         "length": 4,
-        "color": "piros",
-        "joker": 0,
-        "tunnel": false
+        "color": "piros"
     },
     {
         "from": "Sault St. Marie",
         "to": "Winnipeg",
         "length": 6,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Duluth",
         "to": "Winnipeg",
         "length": 4,
-        "color": "fekete",
-        "joker": 0,
-        "tunnel": false
+        "color": "fekete"
     },
     {
         "from": "Duluth",
         "to": "Sault St. Marie",
         "length": 3,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Duluth",
         "to": "Toronto",
         "length": 6,
-        "color": "lila",
-        "joker": 0,
-        "tunnel": false
+        "color": "lila"
     },
     {
         "from": "Chicago",
         "to": "Duluth",
         "length": 3,
-        "color": "piros",
-        "joker": 0,
-        "tunnel": false
+        "color": "piros"
     },
     {
         "from": "Duluth",
         "to": "Omaha",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Duluth",
         "to": "Omaha",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Chicago",
         "to": "Omaha",
         "length": 4,
-        "color": "kek",
-        "joker": 0,
-        "tunnel": false
+        "color": "kek"
     },
     {
         "from": "Kansas City",
         "to": "Omaha",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Kansas City",
         "to": "Omaha",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Kansas City",
         "to": "Saint Louis",
         "length": 2,
-        "color": "kek",
-        "joker": 0,
-        "tunnel": false
+        "color": "kek"
     },
     {
         "from": "Kansas City",
         "to": "Saint Louis",
         "length": 2,
-        "color": "lila",
-        "joker": 0,
-        "tunnel": false
+        "color": "lila"
     },
     {
         "from": "Kansas City",
         "to": "Oklahoma City",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Kansas City",
         "to": "Oklahoma City",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Little Rock",
         "to": "Oklahoma City",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Dallas",
         "to": "Oklahoma City",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Dallas",
         "to": "Oklahoma City",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Dallas",
         "to": "Little Rock",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Dallas",
         "to": "Houston",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Dallas",
         "to": "Houston",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Houston",
         "to": "New Orleans",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Little Rock",
         "to": "New Orleans",
         "length": 3,
-        "color": "zold",
-        "joker": 0,
-        "tunnel": false
+        "color": "zold"
     },
     {
         "from": "Atlanta",
         "to": "New Orleans",
         "length": 4,
-        "color": "sarga",
-        "joker": 0,
-        "tunnel": false
+        "color": "sarga"
     },
     {
         "from": "Atlanta",
         "to": "New Orleans",
         "length": 4,
-        "color": "narancs",
-        "joker": 0,
-        "tunnel": false
+        "color": "narancs"
     },
     {
         "from": "Miami",
         "to": "New Orleans",
         "length": 6,
-        "color": "piros",
-        "joker": 0,
-        "tunnel": false
+        "color": "piros"
     },
     {
         "from": "Atlanta",
         "to": "Miami",
         "length": 5,
-        "color": "kek",
-        "joker": 0,
-        "tunnel": false
+        "color": "kek"
     },
     {
         "from": "Charleston",
         "to": "Miami",
         "length": 4,
-        "color": "lila",
-        "joker": 0,
-        "tunnel": false
+        "color": "lila"
     },
     {
         "from": "Atlanta",
         "to": "Nashville",
         "length": 1,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Atlanta",
         "to": "Raleigh",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Atlanta",
         "to": "Raleigh",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Atlanta",
         "to": "Charleston",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Little Rock",
         "to": "Saint Louis",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Little Rock",
         "to": "Nashville",
         "length": 3,
-        "color": "feher",
-        "joker": 0,
-        "tunnel": false
+        "color": "feher"
     },
     {
         "from": "Nashville",
         "to": "Saint Louis",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Pittsburgh",
         "to": "Saint Louis",
         "length": 5,
-        "color": "zold",
-        "joker": 0,
-        "tunnel": false
+        "color": "zold"
     },
     {
         "from": "Chicago",
         "to": "Saint Louis",
         "length": 2,
-        "color": "zold",
-        "joker": 0,
-        "tunnel": false
+        "color": "zold"
     },
     {
         "from": "Chicago",
         "to": "Saint Louis",
         "length": 2,
-        "color": "feher",
-        "joker": 0,
-        "tunnel": false
+        "color": "feher"
     },
     {
         "from": "Chicago",
         "to": "Pittsburgh",
         "length": 3,
-        "color": "narancs",
-        "joker": 0,
-        "tunnel": false
+        "color": "narancs"
     },
     {
         "from": "Chicago",
         "to": "Pittsburgh",
         "length": 3,
-        "color": "fekete",
-        "joker": 0,
-        "tunnel": false
+        "color": "fekete"
     },
     {
         "from": "Chicago",
         "to": "Toronto",
         "length": 4,
-        "color": "feher",
-        "joker": 0,
-        "tunnel": false
+        "color": "feher"
     },
     {
         "from": "Pittsburgh",
         "to": "Toronto",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Sault St. Marie",
         "to": "Toronto",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Montreal",
         "to": "Toronto",
         "length": 3,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Montreal",
         "to": "Sault St. Marie",
         "length": 5,
-        "color": "fekete",
-        "joker": 0,
-        "tunnel": false
+        "color": "fekete"
     },
     {
         "from": "Boston",
         "to": "Montreal",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Boston",
         "to": "Montreal",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Montreal",
         "to": "New York",
         "length": 3,
-        "color": "kek",
-        "joker": 0,
-        "tunnel": false
+        "color": "kek"
     },
     {
         "from": "Boston",
         "to": "New York",
         "length": 2,
-        "color": "sarga",
-        "joker": 0,
-        "tunnel": false
+        "color": "sarga"
     },
     {
         "from": "Boston",
         "to": "New York",
         "length": 2,
-        "color": "piros",
-        "joker": 0,
-        "tunnel": false
+        "color": "piros"
     },
     {
         "from": "New York",
         "to": "Pittsburgh",
         "length": 2,
-        "color": "zold",
-        "joker": 0,
-        "tunnel": false
+        "color": "zold"
     },
     {
         "from": "New York",
         "to": "Pittsburgh",
         "length": 2,
-        "color": "feher",
-        "joker": 0,
-        "tunnel": false
+        "color": "feher"
     },
     {
         "from": "New York",
         "to": "Washington",
         "length": 2,
-        "color": "narancs",
-        "joker": 0,
-        "tunnel": false
+        "color": "narancs"
     },
     {
         "from": "New York",
         "to": "Washington",
         "length": 2,
-        "color": "fekete",
-        "joker": 0,
-        "tunnel": false
+        "color": "fekete"
     },
     {
         "from": "Raleigh",
         "to": "Washington",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Raleigh",
         "to": "Washington",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Pittsburgh",
         "to": "Washington",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Nashville",
         "to": "Pittsburgh",
         "length": 4,
-        "color": "sarga",
-        "joker": 0,
-        "tunnel": false
+        "color": "sarga"
     },
     {
         "from": "Pittsburgh",
         "to": "Raleigh",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     },
     {
         "from": "Nashville",
         "to": "Raleigh",
         "length": 3,
-        "color": "fekete",
-        "joker": 0,
-        "tunnel": false
+        "color": "fekete"
     },
     {
         "from": "Charleston",
         "to": "Raleigh",
         "length": 2,
-        "color": "szurke",
-        "joker": 0,
-        "tunnel": false
+        "color": "szurke"
     }
 ]

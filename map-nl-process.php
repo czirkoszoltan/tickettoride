@@ -1,6 +1,6 @@
 <?php
 
-$file = file_get_contents('map-usa-input.json');
+$file = file_get_contents('map-nl-input.json');
 $json = json_decode($file);
 $output = [];
 foreach ($json as $route) {
@@ -18,5 +18,5 @@ foreach ($json as $route) {
 }
 $json = json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-file_put_contents('map-usa.json', $json);
+file_put_contents('map-nl.json', $json);
 

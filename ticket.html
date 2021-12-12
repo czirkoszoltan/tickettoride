@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Ticket to Ride</title>
-    <link rel="stylesheet" href="ticket.css?v20">
+    <link rel="stylesheet" href="ticket.css?v21">
     <link rel="shortcut icon" href="favicon.png">
-    <script src="ticket.js?v20"></script>
+    <script src="ticket.js?v21"></script>
 </head>
 <body>
     <div class="container">
@@ -14,8 +14,9 @@
 
         <div id="select-map">
             <p>
-                <button class="control" id="map-eu">🌍 EU</button>
-                <button class="control" id="map-usa">🌎 USA</button>
+                <button class="control" id="map-eu">🚂 EU</button>
+                <button class="control" id="map-usa">🗽 USA</button>
+                <button class="control" id="map-nl">🌷 NL</button>
             </p>
         </div>
 
@@ -25,7 +26,7 @@
                 <div id="selected-tickets"></div>
             </section>
             
-            <section>
+            <section id="random-section">
                 <h2>Random Tickets</h2>
                 <div class="new-tickets">
                     <div><a id="random-ticket-1" class="ticket-new has-after-icon" tabindex="0" data-ticket="" data-keep=""></a></div>
@@ -36,6 +37,7 @@
             
             <p>
                 <button class="control" id="tickets-button" data-title="New Tickets"></button>
+                <button class="control" id="neighbors-button" data-title="Neighbor Ticket"></button>
             </p>
         </div>
     </div>

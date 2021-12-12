@@ -1,0 +1,584 @@
+[
+    {
+        "from": "Groningen",
+        "to": "Waddeneilanden",
+        "length": 6,
+        "color": "sarga"
+    },
+    {
+        "from": "Leeuwarden",
+        "to": "Waddeneilanden",
+        "length": 2,
+        "color": "zold"
+    },
+    {
+        "from": "Sneek",
+        "to": "Waddeneilanden",
+        "length": 3,
+        "color": "szurke"
+    },
+    {
+        "from": "Den Helder",
+        "to": "Waddeneilanden",
+        "length": 3,
+        "color": "lila"
+    },
+    {
+        "from": "Den Helder",
+        "to": "Sneek",
+        "length": 4,
+        "color": "feher"
+    },
+    {
+        "from": "Den Helder",
+        "to": "Sneek",
+        "length": 4,
+        "color": "piros"
+    },
+    {
+        "from": "Den Helder",
+        "to": "Haarlem",
+        "length": 4,
+        "color": "kek"
+    },
+    {
+        "from": "Den Helder",
+        "to": "Haarlem",
+        "length": 4,
+        "color": "narancs"
+    },
+    {
+        "from": "Groningen",
+        "to": "Leeuwarden",
+        "length": 3,
+        "color": "kek"
+    },
+    {
+        "from": "Groningen",
+        "to": "Leeuwarden",
+        "length": 3,
+        "color": "narancs"
+    },
+    {
+        "from": "Leeuwarden",
+        "to": "Sneek",
+        "length": 1,
+        "color": "fekete"
+    },
+    {
+        "from": "Leeuwarden",
+        "to": "Sneek",
+        "length": 1,
+        "color": "sarga"
+    },
+    {
+        "from": "Lelystad",
+        "to": "Sneek",
+        "length": 4,
+        "color": "kek"
+    },
+    {
+        "from": "Lelystad",
+        "to": "Sneek",
+        "length": 4,
+        "color": "zold"
+    },
+    {
+        "from": "Emden",
+        "to": "Groningen",
+        "length": 3,
+        "color": "szurke"
+    },
+    {
+        "from": "Emden",
+        "to": "Groningen",
+        "length": 3,
+        "color": "szurke"
+    },
+    {
+        "from": "Emmen",
+        "to": "Groningen",
+        "length": 3,
+        "color": "piros"
+    },
+    {
+        "from": "Emmen",
+        "to": "Groningen",
+        "length": 3,
+        "color": "fekete"
+    },
+    {
+        "from": "Groningen",
+        "to": "Zwolle",
+        "length": 6,
+        "color": "zold"
+    },
+    {
+        "from": "Groningen",
+        "to": "Zwolle",
+        "length": 6,
+        "color": "feher"
+    },
+    {
+        "from": "Emden",
+        "to": "Lingen",
+        "length": 6,
+        "color": "szurke"
+    },
+    {
+        "from": "Emden",
+        "to": "Lingen",
+        "length": 6,
+        "color": "fekete"
+    },
+    {
+        "from": "Emden",
+        "to": "Emmen",
+        "length": 4,
+        "color": "lila"
+    },
+    {
+        "from": "Emmen",
+        "to": "Lingen",
+        "length": 3,
+        "color": "sarga"
+    },
+    {
+        "from": "Emmen",
+        "to": "Lingen",
+        "length": 3,
+        "color": "zold"
+    },
+    {
+        "from": "Emmen",
+        "to": "Zwolle",
+        "length": 4,
+        "color": "szurke"
+    },
+    {
+        "from": "Enschede",
+        "to": "Lingen",
+        "length": 3,
+        "color": "piros"
+    },
+    {
+        "from": "Enschede",
+        "to": "Lingen",
+        "length": 3,
+        "color": "lila"
+    },
+    {
+        "from": "Lelystad",
+        "to": "Zwolle",
+        "length": 2,
+        "color": "fekete"
+    },
+    {
+        "from": "Lelystad",
+        "to": "Zwolle",
+        "length": 2,
+        "color": "piros"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Lelystad",
+        "length": 3,
+        "color": "sarga"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Lelystad",
+        "length": 3,
+        "color": "feher"
+    },
+    {
+        "from": "Enschede",
+        "to": "Zwolle",
+        "length": 4,
+        "color": "kek"
+    },
+    {
+        "from": "Enschede",
+        "to": "Zwolle",
+        "length": 4,
+        "color": "sarga"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Zwolle",
+        "length": 4,
+        "color": "narancs"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Zwolle",
+        "length": 4,
+        "color": "lila"
+    },
+    {
+        "from": "Duisburg",
+        "to": "Enschede",
+        "length": 6,
+        "color": "feher"
+    },
+    {
+        "from": "Duisburg",
+        "to": "Enschede",
+        "length": 6,
+        "color": "narancs"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Enschede",
+        "length": 5,
+        "color": "zold"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Enschede",
+        "length": 5,
+        "color": "fekete"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Haarlem",
+        "length": 1,
+        "color": "zold"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Haarlem",
+        "length": 1,
+        "color": "fekete"
+    },
+    {
+        "from": "'s Gravenhage",
+        "to": "Haarlem",
+        "length": 2,
+        "color": "feher"
+    },
+    {
+        "from": "'s Gravenhage",
+        "to": "Haarlem",
+        "length": 2,
+        "color": "lila"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Utrecht",
+        "length": 1,
+        "color": "lila"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Utrecht",
+        "length": 1,
+        "color": "narancs"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Rotterdam",
+        "length": 4,
+        "color": "piros"
+    },
+    {
+        "from": "Amsterdam",
+        "to": "Rotterdam",
+        "length": 4,
+        "color": "kek"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Utrecht",
+        "length": 4,
+        "color": "feher"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Utrecht",
+        "length": 4,
+        "color": "kek"
+    },
+    {
+        "from": "'s Hertogenbosch",
+        "to": "Utrecht",
+        "length": 3,
+        "color": "piros"
+    },
+    {
+        "from": "'s Hertogenbosch",
+        "to": "Utrecht",
+        "length": 3,
+        "color": "fekete"
+    },
+    {
+        "from": "Rotterdam",
+        "to": "Utrecht",
+        "length": 3,
+        "color": "szurke"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Nijmegen",
+        "length": 1,
+        "color": "sarga"
+    },
+    {
+        "from": "Arnhem",
+        "to": "Nijmegen",
+        "length": 1,
+        "color": "piros"
+    },
+    {
+        "from": "Duisburg",
+        "to": "Nijmegen",
+        "length": 4,
+        "color": "lila"
+    },
+    {
+        "from": "Duisburg",
+        "to": "Nijmegen",
+        "length": 4,
+        "color": "kek"
+    },
+    {
+        "from": "Duisburg",
+        "to": "Roermond",
+        "length": 3,
+        "color": "zold"
+    },
+    {
+        "from": "Duisburg",
+        "to": "Roermond",
+        "length": 3,
+        "color": "sarga"
+    },
+    {
+        "from": "Eindhoven",
+        "to": "Roermond",
+        "length": 3,
+        "color": "piros"
+    },
+    {
+        "from": "Eindhoven",
+        "to": "Roermond",
+        "length": 3,
+        "color": "feher"
+    },
+    {
+        "from": "Maastricht",
+        "to": "Roermond",
+        "length": 2,
+        "color": "fekete"
+    },
+    {
+        "from": "Maastricht",
+        "to": "Roermond",
+        "length": 2,
+        "color": "narancs"
+    },
+    {
+        "from": "'s Hertogenbosch",
+        "to": "Eindhoven",
+        "length": 1,
+        "color": "kek"
+    },
+    {
+        "from": "'s Hertogenbosch",
+        "to": "Eindhoven",
+        "length": 1,
+        "color": "zold"
+    },
+    {
+        "from": "Eindhoven",
+        "to": "Nijmegen",
+        "length": 3,
+        "color": "narancs"
+    },
+    {
+        "from": "Eindhoven",
+        "to": "Nijmegen",
+        "length": 3,
+        "color": "fekete"
+    },
+    {
+        "from": "Eindhoven",
+        "to": "Maastricht",
+        "length": 4,
+        "color": "sarga"
+    },
+    {
+        "from": "Eindhoven",
+        "to": "Maastricht",
+        "length": 4,
+        "color": "lila"
+    },
+    {
+        "from": "Liege",
+        "to": "Maastricht",
+        "length": 2,
+        "color": "feher"
+    },
+    {
+        "from": "Liege",
+        "to": "Maastricht",
+        "length": 2,
+        "color": "kek"
+    },
+    {
+        "from": "Hasselt",
+        "to": "Liege",
+        "length": 2,
+        "color": "szurke"
+    },
+    {
+        "from": "Aarschot",
+        "to": "Liege",
+        "length": 5,
+        "color": "piros"
+    },
+    {
+        "from": "Hasselt",
+        "to": "Maastricht",
+        "length": 2,
+        "color": "zold"
+    },
+    {
+        "from": "Hasselt",
+        "to": "Maastricht",
+        "length": 2,
+        "color": "piros"
+    },
+    {
+        "from": "Hasselt",
+        "to": "Turnhout",
+        "length": 3,
+        "color": "sarga"
+    },
+    {
+        "from": "Hasselt",
+        "to": "Turnhout",
+        "length": 3,
+        "color": "narancs"
+    },
+    {
+        "from": "Aarschot",
+        "to": "Hasselt",
+        "length": 2,
+        "color": "fekete"
+    },
+    {
+        "from": "Aarschot",
+        "to": "Hasselt",
+        "length": 2,
+        "color": "lila"
+    },
+    {
+        "from": "Aarschot",
+        "to": "Antwerpen",
+        "length": 2,
+        "color": "sarga"
+    },
+    {
+        "from": "Aarschot",
+        "to": "Antwerpen",
+        "length": 2,
+        "color": "kek"
+    },
+    {
+        "from": "Antwerpen",
+        "to": "Turnhout",
+        "length": 2,
+        "color": "piros"
+    },
+    {
+        "from": "Antwerpen",
+        "to": "Turnhout",
+        "length": 2,
+        "color": "lila"
+    },
+    {
+        "from": "Antwerpen",
+        "to": "Rotterdam",
+        "length": 5,
+        "color": "fekete"
+    },
+    {
+        "from": "Antwerpen",
+        "to": "Rotterdam",
+        "length": 5,
+        "color": "feher"
+    },
+    {
+        "from": "Antwerpen",
+        "to": "Middelburg",
+        "length": 5,
+        "color": "narancs"
+    },
+    {
+        "from": "Antwerpen",
+        "to": "Middelburg",
+        "length": 5,
+        "color": "zold"
+    },
+    {
+        "from": "Breda",
+        "to": "Turnhout",
+        "length": 2,
+        "color": "fekete"
+    },
+    {
+        "from": "Breda",
+        "to": "Turnhout",
+        "length": 2,
+        "color": "kek"
+    },
+    {
+        "from": "'s Hertogenbosch",
+        "to": "Breda",
+        "length": 2,
+        "color": "feher"
+    },
+    {
+        "from": "'s Hertogenbosch",
+        "to": "Breda",
+        "length": 2,
+        "color": "narancs"
+    },
+    {
+        "from": "Breda",
+        "to": "Rotterdam",
+        "length": 2,
+        "color": "sarga"
+    },
+    {
+        "from": "Breda",
+        "to": "Rotterdam",
+        "length": 2,
+        "color": "lila"
+    },
+    {
+        "from": "'s Gravenhage",
+        "to": "Rotterdam",
+        "length": 1,
+        "color": "zold"
+    },
+    {
+        "from": "'s Gravenhage",
+        "to": "Rotterdam",
+        "length": 1,
+        "color": "narancs"
+    },
+    {
+        "from": "'s Gravenhage",
+        "to": "Middelburg",
+        "length": 6,
+        "color": "piros"
+    },
+    {
+        "from": "'s Gravenhage",
+        "to": "Middelburg",
+        "length": 6,
+        "color": "sarga"
+    }
+]
