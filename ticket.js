@@ -130,10 +130,10 @@ function ticket_to_ride(routes) {
         tickets_button.style.display = 'none';
         try {
             if (to_build.length == double_neighbors.length) {
-                throw "No more routes";
+                throw "No more routes!";
             }
-            if (Math.random() < 0.1) {
-                throw "No ticket for this turn"
+            if (Math.random() < 0.2) {
+                throw "No ticket for this turn 😞"
             }
             var ticket = random_different(random_double_neighbor, 1, to_build)[0];
             to_build.push(ticket);
