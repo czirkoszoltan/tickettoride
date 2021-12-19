@@ -15,8 +15,9 @@
  */
 function ticket_to_ride(routes) {
     var cities = create_cities();
+    var neighbors = create_neighbors();
     var double_neighbors = create_double_neighbors();
-
+    
     const STATE_CLEAR = 0;
     const STATE_GENERATED = 1;
 
@@ -32,16 +33,21 @@ function ticket_to_ride(routes) {
     var random_section = document.getElementById('random-section');
     var steamwhistle = document.getElementById('steamwhistle');
     
+    function city_pair_to_string(from, to) {
+        // mindig ábécében, hogy később ne lehessen "amsterdam-wien" és "wien-amsterdam" ticket
+        if (from > to) {
+            var temp = from;
+            from = to;
+            to = temp;
+        }
+        return from + " – " + to;
+    }
+    
     function create_cities() {
         var cities = [];
 
         for (var i = 0; i < routes.length; ++i) {
             var route = routes[i];
-            if (route.from >= route.to) {
-                var temp = route.from;
-                route.from = route.to;
-                route.to = temp;
-            }
             if (cities.indexOf(route.from) == -1)
                 cities.push(route.from);
             if (cities.indexOf(route.to) == -1)
@@ -52,8 +58,17 @@ function ticket_to_ride(routes) {
         return cities;
     }
     
-    function city_pair_to_string(from, to) {
-        return from + " – " + to;
+    function create_neighbors() {
+        var neighbors = [];
+        
+        for (var i = 0; i < routes.length; ++i) {
+            var route = routes[i];
+            var pair_str = city_pair_to_string(route.from, route.to);
+            if (neighbors.indexOf(pair_str) == -1)
+                neighbors.push(pair_str);
+        }
+        
+        return neighbors;
     }
     
     function create_double_neighbors() {
@@ -76,7 +91,6 @@ function ticket_to_ride(routes) {
         var elements = [];
         while (elements.length < count) {
             var new_element = generator();
-            console.log("generator", new_element, elements, avoid, elements.indexOf(new_element) == -1, avoid.indexOf(new_element) == -1);
             if (elements.indexOf(new_element) == -1 && avoid.indexOf(new_element) == -1)
                 elements.push(new_element);
         }
@@ -89,9 +103,8 @@ function ticket_to_ride(routes) {
     }
             
     function random_city_pair() {
-        var pair = random_different(random_city, 2);
-        pair.sort();    // mindig ábécében, hogy később ne lehessen "amsterdam-wien" és "wien-amsterdam" ticket
-        return city_pair_to_string(pair[0], pair[1]);
+        var cities = random_different(random_city, 2);
+        return city_pair_to_string(cities[0], cities[1]);
     }
     
     function random_double_neighbor() {
@@ -102,7 +115,8 @@ function ticket_to_ride(routes) {
     function set_random_tickets() {
         neighbors_button.style.display = 'none';
         random_section.style.display = '';
-        var tickets = random_different(random_city_pair, 3, to_build);
+        var avoid = to_build.concat(neighbors);
+        var tickets = random_different(random_city_pair, 3, avoid);
         random_ticket_1.setAttribute('data-ticket', tickets[0]);
         random_ticket_2.setAttribute('data-ticket', tickets[1]);
         random_ticket_3.setAttribute('data-ticket', tickets[2]);
@@ -183,7 +197,7 @@ function ticket_to_ride(routes) {
         switch (state) {
             case STATE_CLEAR:
                 set_random_tickets();
-                tickets_button.setAttribute('data-title', "Select Tickets");
+                tickets_button.setAttribute('data-title', "Keep Selected Tickets");
                 state = STATE_GENERATED;
                 return;
                 
@@ -230,9 +244,9 @@ function init() {
     play_game.style.display = 'none';
     random_section.style.display = 'none';
     
-    map_usa.addEventListener('click', load_map.bind(null, 'map-usa.json'));
-    map_eu.addEventListener('click', load_map.bind(null, 'map-eu.json'));
-    map_nl.addEventListener('click', load_map.bind(null, 'map-nl.json'));
+    map_usa.addEventListener('click', load_map.bind(null, 'map-usa.json?v1'));
+    map_eu.addEventListener('click', load_map.bind(null, 'map-eu.json?v2'));
+    map_nl.addEventListener('click', load_map.bind(null, 'map-nl.json?v1í'));
     
     function load_map(filename) {
         function reqListener() {

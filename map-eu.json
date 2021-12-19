@@ -16,6 +16,22 @@
         "tunnel": false
     },
     {
+        "from": "Bruxelles",
+        "to": "Paris",
+        "length": 2,
+        "color": "sarga",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Bruxelles",
+        "to": "Paris",
+        "length": 2,
+        "color": "piros",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
         "from": "Dieppe",
         "to": "London",
         "length": 2,

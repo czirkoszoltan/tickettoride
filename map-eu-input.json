@@ -1,6 +1,8 @@
 [
     ["Edinburgh", "London", 4, "fekete"],
     ["Edinburgh", "London", 4, "narancs"],
+    ["Bruxelles", "Paris", 2, "sarga"],
+    ["Bruxelles", "Paris", 2, "piros"],
     ["London", "Dieppe", 2, "szurke", 1],
     ["London", "Dieppe", 2, "szurke", 1],
     ["London", "Amsterdam", 2, "szurke", 2],
