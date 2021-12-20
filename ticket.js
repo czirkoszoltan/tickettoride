@@ -246,7 +246,7 @@ function init() {
     
     map_usa.addEventListener('click', load_map.bind(null, 'map-usa.json?v1'));
     map_eu.addEventListener('click', load_map.bind(null, 'map-eu.json?v2'));
-    map_nl.addEventListener('click', load_map.bind(null, 'map-nl.json?v1í'));
+    map_nl.addEventListener('click', load_map.bind(null, 'map-nl.json?v1'));
     
     function load_map(filename) {
         function reqListener() {
