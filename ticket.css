@@ -73,7 +73,7 @@ h1 {
 .ticket-new {
 }
 .ticket-new:before {
-    content: attr(data-ticket);
+    content: attr(data-ticket-visible);
 }
 .ticket-new[data-ticket=""] {
     visibility: hidden;

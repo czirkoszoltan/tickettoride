@@ -14,9 +14,20 @@
  *
  */
 function ticket_to_ride(routes) {
+    /* Tömb  városok neveivel ("London"), ábécében */
     var cities = create_cities();
+    
+    /* Tömb a várospárok neveivel ("Edinburg – London") ábécében */
     var neighbors = create_neighbors();
+    
+    /* Tömb a várospárok neveivel ("Edinburg – London") ábécében, de csak azok, amik közt legalább 2 út van */
     var double_neighbors = create_double_neighbors();
+    
+    /* Gráf a térképpel. Tömb, aminek az indexei a városok (lásd a cities tömböt),
+     * az elemei pedig az élek. Az élek kis objektumok, pl.
+     * {dest: 4 (index a cities tömbbe), len: 3 (vonatok száma)}.
+     * Mindkét irány benne van. */
+    var map = create_map();
     
     const STATE_CLEAR = 0;
     const STATE_GENERATED = 1;
@@ -32,6 +43,8 @@ function ticket_to_ride(routes) {
     var neighbors_button = document.getElementById('neighbors-button');
     var random_section = document.getElementById('random-section');
     var steamwhistle = document.getElementById('steamwhistle');
+
+    /* Utility ***********************************************************/
     
     function city_pair_to_string(from, to) {
         // mindig ábécében, hogy később ne lehessen "amsterdam-wien" és "wien-amsterdam" ticket
@@ -42,6 +55,37 @@ function ticket_to_ride(routes) {
         }
         return from + " – " + to;
     }
+    
+    function split_city_pair(pair) {
+        var center = pair.indexOf("–");
+        var from = pair.substr(0, center).trim();
+        var to = pair.substr(center + 1).trim();
+        return [from, to];
+    }
+
+    function htmlspecialchars(text) {
+        var map = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        };
+        
+        if (!text)
+            return "";
+        return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+    
+    function city_pair_with_distance(pair) {
+        var split = split_city_pair(pair);
+        var from = split[0];
+        var to = split[1];
+        var dist = dijkstra_distance(split[0], split[1]);
+        return from + " – " + to + " " + dist;
+    }
+    
+    /* Adatszerkezetek építése *******************************************/
     
     function create_cities() {
         var cities = [];
@@ -85,6 +129,74 @@ function ticket_to_ride(routes) {
 
         return double_neighbors;
     }
+    
+    function create_map() {
+        var map = [];        
+        for (var i = 0; i < cities.length; ++i)
+            map.push([]);
+        
+        for (var i = 0; i < routes.length; ++i) {
+            var route = routes[i];
+            var from_idx = cities.indexOf(route.from);
+            var to_idx = cities.indexOf(route.to);
+            /* graph is unidirectional, add edge in both directions */
+            map[from_idx].push({
+                "dest": to_idx,
+                "len": route.length
+            });
+            map[to_idx].push({
+                "dest": from_idx,
+                "len": route.length
+            });
+        }
+        
+        return map;
+    }
+    
+    function dijkstra_distance(from, to) {
+        var num_cities = cities.length;
+        var infinity = 1/0;
+        
+        var from_idx = cities.indexOf(from);
+        var to_idx = cities.indexOf(to);
+        if (from_idx === -1 || to_idx === -1)
+            throw "Nincs ilyen város";
+        
+        var visited = [];
+        var distance = [];
+        for (var i = 0; i < num_cities; ++i) {
+            visited.push(false);
+            distance.push(infinity);
+        }
+        
+        var current = from_idx;
+        distance[from_idx] = 0;
+        
+        while (!visited[to_idx] && current !== -1) {
+            var edges = map[current];
+            for (var i = 0; i < edges.length; ++i) {
+                var edge = edges[i];
+                if (visited[edge.dest])
+                    continue;
+                var new_dist = distance[current] + edge.len;
+                if (new_dist < distance[edge.dest])
+                    distance[edge.dest] = new_dist;
+            }
+            visited[current] = true;
+            
+            var next = -1;
+            for (var i = 0; i < num_cities; ++i)
+                if (!visited[i])
+                    if (next === -1 || distance[i] < distance[next])
+                        next = i;
+            
+            current = next;
+        }
+        
+        return distance[to_idx];
+    }
+
+    /* Random ************************************************************/
 
     function random_different(generator, count, avoid) {
         avoid = avoid || [];
@@ -111,6 +223,8 @@ function ticket_to_ride(routes) {
         var random_idx = Math.floor(Math.random() * double_neighbors.length);
         return double_neighbors[random_idx];
     }
+
+    /* Ui & game logic ***************************************************/
     
     function set_random_tickets() {
         neighbors_button.style.display = 'none';
@@ -118,8 +232,11 @@ function ticket_to_ride(routes) {
         var avoid = to_build.concat(neighbors);
         var tickets = random_different(random_city_pair, 3, avoid);
         random_ticket_1.setAttribute('data-ticket', tickets[0]);
+        random_ticket_1.setAttribute('data-ticket-visible', city_pair_with_distance(tickets[0]));
         random_ticket_2.setAttribute('data-ticket', tickets[1]);
+        random_ticket_2.setAttribute('data-ticket-visible', city_pair_with_distance(tickets[1]));
         random_ticket_3.setAttribute('data-ticket', tickets[2]);
+        random_ticket_3.setAttribute('data-ticket-visible', city_pair_with_distance(tickets[2]));
         random_ticket_1.setAttribute('data-keep', '');
         random_ticket_2.setAttribute('data-keep', '');
         random_ticket_3.setAttribute('data-keep', '');
