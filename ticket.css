@@ -20,6 +20,7 @@ body {
 
 a, button {
     -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer;
 }
 
 .has-after-icon:after {
@@ -48,13 +49,14 @@ h1 {
     font-size: 2em;
 }
 
+nav {
+    margin-top: 1em;
+}
+
 .ticket-build {
     font-size: 1.4em;
     line-height: 1.8em;
     color: #833;
-}
-.ticket-build:before {
-    content: attr(data-title);
 }
 .ticket-build:after {
     content: "∅";
@@ -71,12 +73,6 @@ h1 {
     line-height: 1.8em;
 }
 .ticket-new {
-}
-.ticket-new:before {
-    content: attr(data-ticket-visible);
-}
-.ticket-new[data-ticket=""] {
-    visibility: hidden;
 }
 .ticket-new[data-keep=""]:after {
     content: "?";
@@ -106,10 +102,6 @@ button:active {
 }
 button:focus {
     outline: 1px dotted #000;
-}
-
-button.control:before {
-    content: attr(data-title);
 }
 
 #steamwhistle {

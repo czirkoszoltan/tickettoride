@@ -1,47 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Ticket to Ride</title>
-    <link rel="stylesheet" href="ticket.css?v24">
+    <link rel="stylesheet" href="ticket.css?v25">
     <link rel="shortcut icon" href="favicon.png">
-    <script src="ticket.js?v24"></script>
+    <script src="mustache.js?v1"></script>
+    <script src="ticket.js?v25"></script>
 </head>
 <body>
     <div class="container">
         <h1>🚂🚃🚃🚃🚃🚃</h1>
-
-        <div id="select-map">
-            <p>
-                <button class="control" id="map-eu">🚂 EU</button>
-                <button class="control" id="map-usa">🗽 USA</button>
-                <button class="control" id="map-nl">🌷 NL</button>
-            </p>
-        </div>
-
-        <div id="play-game">
-            <section>
-                <h2>Selected Tickets</h2>
-                <div id="selected-tickets"></div>
-            </section>
-            
-            <section id="random-section">
-                <h2>Random Tickets</h2>
-                <div class="new-tickets">
-                    <div><a id="random-ticket-1" class="ticket-new has-after-icon" tabindex="0" data-ticket="" data-keep=""></a></div>
-                    <div><a id="random-ticket-2" class="ticket-new has-after-icon" tabindex="0" data-ticket="" data-keep=""></a></div>
-                    <div><a id="random-ticket-3" class="ticket-new has-after-icon" tabindex="0" data-ticket="" data-keep=""></a></div>
-                </div>
-            </section>
-            
-            <p>
-                <button class="control" id="tickets-button" data-title="New Tickets"></button>
-                <button class="control" id="neighbors-button" data-title="Neighbor Ticket"></button>
-            </p>
+        <div id="screen">
         </div>
     </div>
     
     <audio id="steamwhistle" src="steamwhistle.mp3"></audio>
+
+    <script type="text/html" id="screen-select-map">
+        <nav>
+            {{#maps}}
+            <button class="load-map-button control">{{emoji}} {{name}}</button>
+            {{/maps}}
+        </nav>
+        <nav>
+            <a id="load-from-localstorage" tabindex="0">Reload</a>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-first-step">
+        <nav>
+            <button id="new-tickets-button" class="control">Normal Player</button>
+            <button id="new-neighbor-ticket-button" class="control">Neutral Player</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-select-tickets">
+        <section>
+            <h2>Selected Tickets</h2>
+            <div class="build-tickets">
+                {{#to_build}}
+                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}}</a></div>
+                {{/to_build}}
+            </div>
+        </section>
+        <section>
+            <h2>Random Tickets</h2>
+            <div class="new-tickets">
+                {{#new_tickets}}
+                <div><a class="ticket-new has-after-icon" tabindex="0" data-keep="{{keep}}">{{route_with_distance}}</a></div>
+                {{/new_tickets}}
+            </div>
+        </section>
+        <nav>
+            <button id="accept-tickets-button" class="control keep-tickets-button">Accept Tickets</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-play-game">
+        <section>
+            <h2>Selected Tickets</h2>
+            <div class="build-tickets">
+                {{#to_build}}
+                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}}</a></div>
+                {{/to_build}}
+            </div>
+        </section>
+        <nav>
+            <button id="new-tickets-button" class="control">New Tickets</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-neighbor-tickets">
+        <section>
+            <h2>Selected Tickets</h2>
+            <div class="build-tickets">
+                {{#to_build}}
+                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}}</a></div>
+                {{/to_build}}
+            </div>
+        </section>
+        <nav>
+            <button id="new-neighbor-ticket-button" class="control">Neighbor Ticket</button>
+        </nav>
+    </script>
 </body>
 </html>

@@ -1,53 +1,310 @@
-/**
- * @param routes
- *      [
- *          {
- *           "from": "Edinburgh",
- *           "to": "London",
- *           "length": 4,
- *           "color": "fekete",
- *           "joker": 0,
- *           "tunnel": false
- *          },
- *          ...
- *      ]
- *
- */
-function ticket_to_ride(routes) {
-    /* Tömb  városok neveivel ("London"), ábécében */
-    var cities = create_cities();
+function ticket_to_ride() {
     
-    /* Tömb a várospárok neveivel ("Edinburg – London") ábécében */
-    var neighbors = create_neighbors();
-    
-    /* Tömb a várospárok neveivel ("Edinburg – London") ábécében, de csak azok, amik közt legalább 2 út van */
-    var double_neighbors = create_double_neighbors();
-    
-    /* Gráf a térképpel. Tömb, aminek az indexei a városok (lásd a cities tömböt),
-     * az elemei pedig az élek. Az élek kis objektumok, pl.
-     * {dest: 4 (index a cities tömbbe), len: 3 (vonatok száma)}.
-     * Mindkét irány benne van. */
-    var map = create_map();
-    
-    const STATE_CLEAR = 0;
-    const STATE_GENERATED = 1;
+    var STATE_SELECT_MAP = 0;
+    var STATE_FIRST_STEP = 1;
+    var STATE_SELECT_TICKETS = 2;
+    var STATE_PLAY_GAME = 3;
+    var STATE_SELECT_NEIGHBOR_TICKETS = 4;
 
-    var state = STATE_CLEAR;
-    var to_build = [];
+    var steamwhistle = document.querySelector('#steamwhistle');
 
-    var selected_tickets = document.getElementById('selected-tickets');
-    var random_ticket_1 = document.getElementById('random-ticket-1');
-    var random_ticket_2 = document.getElementById('random-ticket-2');
-    var random_ticket_3 = document.getElementById('random-ticket-3');
-    var tickets_button = document.getElementById('tickets-button');
-    var neighbors_button = document.getElementById('neighbors-button');
-    var random_section = document.getElementById('random-section');
-    var steamwhistle = document.getElementById('steamwhistle');
+    var maps = [
+        {
+            name: 'EU',
+            filename: 'map-eu.json?v2',
+            emoji: '🚂'
+        },
+        {
+            name: 'NL',
+            filename: 'map-nl.json?v1',
+            emoji: '🌷'
+        },
+        {
+            name: 'USA',
+            filename: 'map-usa.json?v1',
+            emoji: '🗽'
+        }
+    ];
+
+    var gamestate = {
+        state: STATE_SELECT_MAP,
+        
+        /*
+         * [
+         *     {
+         *      "from": "Edinburgh",
+         *      "to": "London",
+         *      "length": 4,
+         *      "color": "fekete",
+         *      "joker": 0,
+         *      "tunnel": false
+         *     },
+         *     ...
+         * ]
+         */
+        routes: [],
+
+        /* [
+         *      {
+         *          route: "Edinburgh - London",
+         *          keep: null | 0 | 1
+         *      }
+         * ]
+         */
+        new_tickets: [],
+
+        /* [
+         *      {
+         *          route: "Edinburgh - London",
+         *          built: 0 | 1
+         *      }
+         * ]
+         */
+        to_build: [],
+    };
+    window.gamestate = gamestate;
+    
+    /* Array of city names, sorted alphabetically */
+    var cities = [];
+
+    /* Array of routes like "Edinburgh – London", sorted alphabetically */
+    var neighbors = [];
+
+    /* Array of neighbors like "Edinburgh – London" sorted alphabetically - only if multiple edges exist between the two cities */
+    var double_neighbors = [];
+
+    /* Graph of the map. Array of cities, index is city idx (see cities array).
+     * Array elements are edges. Edges are objects like
+     * {dest: 4 (index to cities array), len: 3 (length of edge)}.
+     * Contains both directions, like Edinburgh -> London and London -> Edinburgh. */
+    var map = [];
+
+    init();
+
+    function init() {
+        draw();
+    }
+    
+    function save_to_localstorage() {
+        window.localStorage.setItem('state', JSON.stringify(gamestate));
+    }
+    
+    function load_from_localstorage() {
+        var json = window.localStorage.getItem('state');
+        if (!json) {
+            alert("No saved state");
+            return;
+        }
+        var decoded_state = JSON.parse(json);
+        if (typeof decoded_state !== 'object') {
+            alert("Saved state is invalid");
+            return;
+        }
+
+        gamestate = decoded_state;
+        create_data_structures();
+        draw();
+    }
+
+    function create_data_structures() {
+        cities = create_cities();
+        neighbors = create_neighbors();
+        double_neighbors = create_double_neighbors();
+        map = create_map();
+    }
+
+    function get_to_build_route_names() {
+        var routes = [];
+        gamestate.to_build.forEach(function(route) {
+            routes.push(route.route);
+        });
+        return routes;
+    }
+
+    function querySelector(selector) {
+        return document.querySelector(selector);
+    }
+
+    function querySelectorAll(selector) {
+        return document.querySelectorAll(selector);
+    }
+
+    function addEventListener(selector_or_element, event, func) {
+        if (typeof selector_or_element == 'string')
+            elements = querySelectorAll(selector_or_element);
+        else
+            elements = [selector_or_element];
+        elements.forEach(function(element) {
+            element.addEventListener(event, func);
+        });
+    }
+
+    function getTemplate(selector) {
+        return querySelector(selector).innerHTML;
+    }
+
+    function setHtml(selector, html) {
+        querySelectorAll(selector).forEach(function(element) {
+            element.innerHTML = html;
+        });
+    }
+
+    function draw() {
+        switch (gamestate.state) {
+            case STATE_SELECT_MAP:
+                var html = Mustache.render(getTemplate('#screen-select-map'), {maps: maps});
+                setHtml('#screen', html);
+                break;
+
+            case STATE_FIRST_STEP:
+                setHtml('#screen', getTemplate('#screen-first-step'));
+                break;
+
+            case STATE_SELECT_TICKETS:
+                var html = Mustache.render(getTemplate('#screen-select-tickets'), gamestate);
+                setHtml('#screen', html);
+                break;
+
+            case STATE_PLAY_GAME:
+                var html = Mustache.render(getTemplate('#screen-play-game'), gamestate);
+                setHtml('#screen', html);
+                break;
+
+            case STATE_SELECT_NEIGHBOR_TICKETS:
+                var html = Mustache.render(getTemplate('#screen-neighbor-tickets'), gamestate);
+                setHtml('#screen', html);
+                break;
+        }
+
+        addEventListener('#load-from-localstorage', 'click', load_from_localstorage.bind(null));
+        querySelectorAll('.load-map-button').forEach(function(element, index) {
+            addEventListener(element, 'click', event_load_map.bind(null, maps[index].filename));
+        });
+        addEventListener('#new-tickets-button', 'click', event_new_tickets.bind(null));
+        addEventListener('#new-neighbor-ticket-button', 'click', event_new_neighbor_ticket.bind(null));
+        addEventListener('#accept-tickets-button', 'click', event_accept_tickets.bind(null));
+        querySelectorAll('.ticket-new').forEach(function(element, index) {
+            addEventListener(element, 'click', event_new_ticket_click.bind(null, index));
+        });
+        querySelectorAll('.ticket-build').forEach(function(element, index) {
+            addEventListener(element, 'click', event_build_ticket_click.bind(null, index));
+        });
+    }
+
+    function event_load_map(url) {
+        function reqListener() {
+            try {
+                var routes = JSON.parse(this.responseText);
+            } catch (e) {
+                alert("Cannot load " + url);
+                return;
+            }
+            if (!(routes instanceof Array)) {
+                alert("Invalid file from " + url);
+                return;
+            }
+
+            gamestate.routes = routes;
+            create_data_structures();
+
+            gamestate.state = STATE_FIRST_STEP;
+            draw();
+        }
+
+        var oReq = new XMLHttpRequest();
+        oReq.addEventListener('load', reqListener);
+        oReq.open('GET', url);
+        oReq.send();
+    }
+
+    function event_new_tickets() {
+        var avoid = get_to_build_route_names().concat(neighbors);
+        var new_tickets = random_different(random_city_pair, 3, avoid);
+        gamestate.new_tickets = [];
+        new_tickets.forEach(function(route) {
+            gamestate.new_tickets.push({
+                route: route,
+                route_with_distance: city_pair_with_distance(route),
+                keep: null
+            })
+        });
+
+        gamestate.state = STATE_SELECT_TICKETS;
+        save_to_localstorage();
+        draw();
+    }
+
+    function event_new_ticket_click(index) {
+        gamestate.new_tickets[index].keep = gamestate.new_tickets[index].keep ? 0 : 1;
+
+        draw();
+    }
+
+    function event_accept_tickets() {
+        var kept_count = 0;
+        gamestate.new_tickets.forEach(function(ticket) {
+            if (ticket.keep) {
+                kept_count += 1;
+            }
+        });
+        if (kept_count < 1) {
+            alert("You have to keep at least one ticket.");
+            return;
+        }
+
+        gamestate.new_tickets.forEach(function(ticket) {
+            if (ticket.keep) {
+                gamestate.to_build.push({
+                    route: ticket.route,
+                    built: 0
+                });
+                kept_count += 1;
+            }
+        });
+        gamestate.new_tickets = [];
+
+        gamestate.state = STATE_PLAY_GAME;
+        save_to_localstorage();
+        draw();
+    }
+
+    function event_build_ticket_click(index) {
+        gamestate.to_build[index].built = gamestate.to_build[index].built ? 0 : 1;
+        if (gamestate.to_build[index].built)
+            steamwhistle.play();
+
+        draw();
+    }
+
+    function event_new_neighbor_ticket() {
+        if (gamestate.to_build.length === double_neighbors.length) {
+            alert("No more routes!");
+            return;
+        }
+        if (gamestate.to_build.length > 0 && Math.random() < 0.2) {
+            alert("No ticket for this turn 😞");
+            return;
+        }
+
+        var avoid = get_to_build_route_names();
+        var route = random_different(random_double_neighbor, 1, avoid)[0];
+        gamestate.to_build.push({
+            route: route,
+            built: 0
+        });
+
+        gamestate.state = STATE_SELECT_NEIGHBOR_TICKETS;
+        save_to_localstorage();
+        draw();
+    }
+
+
+
 
     /* Utility ***********************************************************/
-    
+
     function city_pair_to_string(from, to) {
-        // mindig ábécében, hogy később ne lehessen "amsterdam-wien" és "wien-amsterdam" ticket
+        // always alphabetically, so there is no "Amsterdam - London" and "London - Amsterdam" ticket
         if (from > to) {
             var temp = from;
             from = to;
@@ -55,7 +312,7 @@ function ticket_to_ride(routes) {
         }
         return from + " – " + to;
     }
-    
+
     function split_city_pair(pair) {
         var center = pair.indexOf("–");
         var from = pair.substr(0, center).trim();
@@ -63,20 +320,6 @@ function ticket_to_ride(routes) {
         return [from, to];
     }
 
-    function htmlspecialchars(text) {
-        var map = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-        };
-        
-        if (!text)
-            return "";
-        return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
-    }
-    
     function city_pair_with_distance(pair) {
         var split = split_city_pair(pair);
         var from = split[0];
@@ -84,59 +327,59 @@ function ticket_to_ride(routes) {
         var dist = dijkstra_distance(split[0], split[1]);
         return from + " – " + to + " " + dist;
     }
-    
-    /* Adatszerkezetek építése *******************************************/
-    
+
+    /* Data structures *******************************************/
+
     function create_cities() {
         var cities = [];
 
-        for (var i = 0; i < routes.length; ++i) {
-            var route = routes[i];
-            if (cities.indexOf(route.from) == -1)
+        for (var i = 0; i < gamestate.routes.length; ++i) {
+            var route = gamestate.routes[i];
+            if (cities.indexOf(route.from) === -1)
                 cities.push(route.from);
-            if (cities.indexOf(route.to) == -1)
+            if (cities.indexOf(route.to) === -1)
                 cities.push(route.to);
         }
         cities.sort();
-        
+
         return cities;
     }
-    
+
     function create_neighbors() {
         var neighbors = [];
-        
-        for (var i = 0; i < routes.length; ++i) {
-            var route = routes[i];
+
+        for (var i = 0; i < gamestate.routes.length; ++i) {
+            var route = gamestate.routes[i];
             var pair_str = city_pair_to_string(route.from, route.to);
-            if (neighbors.indexOf(pair_str) == -1)
+            if (neighbors.indexOf(pair_str) === -1)
                 neighbors.push(pair_str);
         }
-        
+
         return neighbors;
     }
-    
+
     function create_double_neighbors() {
         var double_neighbors = [];
-        
+
         var neighbors = {};
-        for (var i = 0; i < routes.length; ++i) {
-            var route = routes[i];
+        for (var i = 0; i < gamestate.routes.length; ++i) {
+            var route = gamestate.routes[i];
             var pair_str = city_pair_to_string(route.from, route.to);
             neighbors[pair_str] = (neighbors[pair_str] || 0) + 1;
-            if (neighbors[pair_str] == 2)
+            if (neighbors[pair_str] === 2)
                 double_neighbors.push(pair_str);
         }
 
         return double_neighbors;
     }
-    
+
     function create_map() {
-        var map = [];        
+        var map = [];
         for (var i = 0; i < cities.length; ++i)
             map.push([]);
-        
-        for (var i = 0; i < routes.length; ++i) {
-            var route = routes[i];
+
+        for (var i = 0; i < gamestate.routes.length; ++i) {
+            var route = gamestate.routes[i];
             var from_idx = cities.indexOf(route.from);
             var to_idx = cities.indexOf(route.to);
             /* graph is unidirectional, add edge in both directions */
@@ -149,29 +392,29 @@ function ticket_to_ride(routes) {
                 "len": route.length
             });
         }
-        
+
         return map;
     }
-    
+
     function dijkstra_distance(from, to) {
         var num_cities = cities.length;
         var infinity = 1/0;
-        
+
         var from_idx = cities.indexOf(from);
         var to_idx = cities.indexOf(to);
         if (from_idx === -1 || to_idx === -1)
-            throw "Nincs ilyen város";
-        
+            throw "No such city";
+
         var visited = [];
         var distance = [];
         for (var i = 0; i < num_cities; ++i) {
             visited.push(false);
             distance.push(infinity);
         }
-        
+
         var current = from_idx;
         distance[from_idx] = 0;
-        
+
         while (!visited[to_idx] && current !== -1) {
             var edges = map[current];
             for (var i = 0; i < edges.length; ++i) {
@@ -183,16 +426,16 @@ function ticket_to_ride(routes) {
                     distance[edge.dest] = new_dist;
             }
             visited[current] = true;
-            
+
             var next = -1;
             for (var i = 0; i < num_cities; ++i)
                 if (!visited[i])
                     if (next === -1 || distance[i] < distance[next])
                         next = i;
-            
+
             current = next;
         }
-        
+
         return distance[to_idx];
     }
 
@@ -203,7 +446,7 @@ function ticket_to_ride(routes) {
         var elements = [];
         while (elements.length < count) {
             var new_element = generator();
-            if (elements.indexOf(new_element) == -1 && avoid.indexOf(new_element) == -1)
+            if (elements.indexOf(new_element) === -1 && avoid.indexOf(new_element) === -1)
                 elements.push(new_element);
         }
         return elements;
@@ -213,179 +456,17 @@ function ticket_to_ride(routes) {
         var random_idx = Math.floor(Math.random() * cities.length);
         return cities[random_idx];
     }
-            
+
     function random_city_pair() {
         var cities = random_different(random_city, 2);
         return city_pair_to_string(cities[0], cities[1]);
     }
-    
+
     function random_double_neighbor() {
         var random_idx = Math.floor(Math.random() * double_neighbors.length);
         return double_neighbors[random_idx];
     }
-
-    /* Ui & game logic ***************************************************/
-    
-    function set_random_tickets() {
-        neighbors_button.style.display = 'none';
-        random_section.style.display = '';
-        var avoid = to_build.concat(neighbors);
-        var tickets = random_different(random_city_pair, 3, avoid);
-        random_ticket_1.setAttribute('data-ticket', tickets[0]);
-        random_ticket_1.setAttribute('data-ticket-visible', city_pair_with_distance(tickets[0]));
-        random_ticket_2.setAttribute('data-ticket', tickets[1]);
-        random_ticket_2.setAttribute('data-ticket-visible', city_pair_with_distance(tickets[1]));
-        random_ticket_3.setAttribute('data-ticket', tickets[2]);
-        random_ticket_3.setAttribute('data-ticket-visible', city_pair_with_distance(tickets[2]));
-        random_ticket_1.setAttribute('data-keep', '');
-        random_ticket_2.setAttribute('data-keep', '');
-        random_ticket_3.setAttribute('data-keep', '');
-    }
-    
-    function clear_tickets() {
-        random_ticket_1.setAttribute('data-ticket', '');
-        random_ticket_2.setAttribute('data-ticket', '');
-        random_ticket_3.setAttribute('data-ticket', '');
-    }
-
-    function get_tickets() {
-        var tickets = [
-            random_ticket_1.getAttribute('data-ticket'),
-            random_ticket_2.getAttribute('data-ticket'),
-            random_ticket_3.getAttribute('data-ticket'),
-        ];
-        return tickets;
-    }
-    
-    function add_random_neighbor() {
-        tickets_button.style.display = 'none';
-        try {
-            if (to_build.length == double_neighbors.length) {
-                throw "No more routes!";
-            }
-            if (Math.random() < 0.2) {
-                throw "No ticket for this turn 😞"
-            }
-            var ticket = random_different(random_double_neighbor, 1, to_build)[0];
-            to_build.push(ticket);
-            add_build_div(ticket);
-        } catch (e) {
-            alert(e.toString());
-        }
-    }
-    
-    function keep_button_value(button) {
-        var keepstr = button.getAttribute('data-keep');
-        if (keepstr === '1')
-            return true;
-        else if (keepstr === '0')
-            return false;
-        else
-            return null;
-    }
-
-    function keep_button_click() {
-        var value = keep_button_value(this);
-        var newvalue = value ? 0 : 1;
-        this.setAttribute('data-keep', newvalue);
-    }
-
-    function add_build_div(ticket) {
-        var div = document.createElement('div');
-        var a = document.createElement('a');
-        a.setAttribute('tabindex', '0');
-        a.setAttribute('class', 'ticket-build has-after-icon');
-        a.setAttribute('data-built', '0');
-        a.setAttribute('data-title', ticket);
-        a.addEventListener('click', ticket_build_click);
-        
-        div.appendChild(a);
-        selected_tickets.appendChild(div);
-    }
-
-    function ticket_build_click() {
-        var built = !+this.getAttribute('data-built');  // new state
-        if (built)
-            steamwhistle.play();
-        this.setAttribute('data-built', built ? '1' : '0');
-    }
-
-    function tickets_button_click() {
-        switch (state) {
-            case STATE_CLEAR:
-                set_random_tickets();
-                tickets_button.setAttribute('data-title', "Keep Selected Tickets");
-                state = STATE_GENERATED;
-                return;
-                
-            case STATE_GENERATED:
-                var keep = [ keep_button_value(random_ticket_1), keep_button_value(random_ticket_2), keep_button_value(random_ticket_3) ];
-                var tickets = get_tickets();
-
-                if (keep.indexOf(true) == -1) {
-                    alert("You have to keep at least one ticket.");
-                    return;
-                }
-                
-                for (var i = 0; i < tickets.length; ++i) {
-                    if (keep[i]) {
-                        to_build.push(tickets[i]);
-                        add_build_div(tickets[i]);
-                    }
-                }
-                
-                clear_tickets();
-                tickets_button.setAttribute('data-title', "New Tickets");
-                state = STATE_CLEAR;
-                return;
-        }
-    }
-
-
-    random_ticket_1.addEventListener('click', keep_button_click);
-    random_ticket_2.addEventListener('click', keep_button_click);
-    random_ticket_3.addEventListener('click', keep_button_click);
-
-    tickets_button.addEventListener('click', tickets_button_click);
-    neighbors_button.addEventListener('click', add_random_neighbor);
 }
 
-function init() {
-    var select_map = document.getElementById('select-map');
-    var play_game = document.getElementById('play-game');
-    var map_usa = document.getElementById('map-usa');
-    var map_eu = document.getElementById('map-eu');
-    var map_nl = document.getElementById('map-nl');
-    var random_section = document.getElementById('random-section');
 
-    play_game.style.display = 'none';
-    random_section.style.display = 'none';
-    
-    map_usa.addEventListener('click', load_map.bind(null, 'map-usa.json?v1'));
-    map_eu.addEventListener('click', load_map.bind(null, 'map-eu.json?v2'));
-    map_nl.addEventListener('click', load_map.bind(null, 'map-nl.json?v1'));
-    
-    function load_map(filename) {
-        function reqListener() {
-            try {
-                var routes = JSON.parse(this.responseText);
-                if (!(routes instanceof Array))
-                    throw "invalid format";
-            } catch (e) {
-                alert("Cannot load " + filename);
-                return;
-            }
-            
-            ticket_to_ride(routes);
-            select_map.style.display = 'none';
-            play_game.style.display = null;
-        }
-
-        var oReq = new XMLHttpRequest();
-        oReq.addEventListener("load", reqListener);
-        oReq.open("GET", filename);
-        oReq.send();
-    }
-}
-
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", ticket_to_ride);
