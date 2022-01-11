@@ -82,6 +82,9 @@ function ticket_to_ride() {
     init();
 
     function init() {
+        window.onerror = function(message, source, lineno, colno, error) {
+            alert(message + " at " + source + ":" + lineno);
+        };
         draw();
     }
     
@@ -115,10 +118,16 @@ function ticket_to_ride() {
 
     function get_to_build_route_names() {
         var routes = [];
-        gamestate.to_build.forEach(function(route) {
+        forEach(gamestate.to_build, function(route) {
             routes.push(route.route);
         });
         return routes;
+    }
+
+    function forEach(collection, func) {
+        for (var idx = 0; idx < collection.length; ++idx) {
+            func(collection[idx], idx);
+        }
     }
 
     function querySelector(selector) {
@@ -134,7 +143,7 @@ function ticket_to_ride() {
             elements = querySelectorAll(selector_or_element);
         else
             elements = [selector_or_element];
-        elements.forEach(function(element) {
+        forEach(elements, function(element) {
             element.addEventListener(event, func);
         });
     }
@@ -144,7 +153,7 @@ function ticket_to_ride() {
     }
 
     function setHtml(selector, html) {
-        querySelectorAll(selector).forEach(function(element) {
+        forEach(querySelectorAll(selector), function(element) {
             element.innerHTML = html;
         });
     }
@@ -177,16 +186,16 @@ function ticket_to_ride() {
         }
 
         addEventListener('#load-from-localstorage', 'click', load_from_localstorage.bind(null));
-        querySelectorAll('.load-map-button').forEach(function(element, index) {
+        forEach(querySelectorAll('.load-map-button'), function(element, index) {
             addEventListener(element, 'click', event_load_map.bind(null, maps[index].filename));
         });
         addEventListener('#new-tickets-button', 'click', event_new_tickets.bind(null));
         addEventListener('#new-neighbor-ticket-button', 'click', event_new_neighbor_ticket.bind(null));
         addEventListener('#accept-tickets-button', 'click', event_accept_tickets.bind(null));
-        querySelectorAll('.ticket-new').forEach(function(element, index) {
+        forEach(querySelectorAll('.ticket-new'), function(element, index) {
             addEventListener(element, 'click', event_new_ticket_click.bind(null, index));
         });
-        querySelectorAll('.ticket-build').forEach(function(element, index) {
+        forEach(querySelectorAll('.ticket-build'), function(element, index) {
             addEventListener(element, 'click', event_build_ticket_click.bind(null, index));
         });
     }
@@ -221,7 +230,7 @@ function ticket_to_ride() {
         var avoid = get_to_build_route_names().concat(neighbors);
         var new_tickets = random_different(random_city_pair, 3, avoid);
         gamestate.new_tickets = [];
-        new_tickets.forEach(function(route) {
+        forEach(new_tickets, function(route) {
             gamestate.new_tickets.push({
                 route: route,
                 route_with_distance: city_pair_with_distance(route),
@@ -242,7 +251,7 @@ function ticket_to_ride() {
 
     function event_accept_tickets() {
         var kept_count = 0;
-        gamestate.new_tickets.forEach(function(ticket) {
+        forEach(gamestate.new_tickets, function(ticket) {
             if (ticket.keep) {
                 kept_count += 1;
             }
@@ -252,7 +261,7 @@ function ticket_to_ride() {
             return;
         }
 
-        gamestate.new_tickets.forEach(function(ticket) {
+        forEach(gamestate.new_tickets, function(ticket) {
             if (ticket.keep) {
                 gamestate.to_build.push({
                     route: ticket.route,
