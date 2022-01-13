@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="ticket.css?v25">
     <link rel="shortcut icon" href="favicon.png">
     <script src="mustache.js?v1"></script>
-    <script src="ticket.js?v27"></script>
+    <script src="ticket.js?v28"></script>
 </head>
 <body>
     <div class="container">
@@ -49,7 +49,7 @@
             <h2>Random Tickets</h2>
             <div class="new-tickets">
                 {{#new_tickets}}
-                <div><a class="ticket-new has-after-icon" tabindex="0" data-keep="{{keep}}">{{route_with_distance}}</a></div>
+                <div><a class="ticket-new has-after-icon" tabindex="0" data-keep="{{keep}}">{{route}} {{distance}}</a></div>
                 {{/new_tickets}}
             </div>
         </section>
@@ -74,10 +74,10 @@
 
     <script type="text/html" id="screen-neighbor-tickets">
         <section>
-            <h2>Selected Tickets</h2>
+            <h2>Built Routes</h2>
             <div class="build-tickets">
                 {{#to_build}}
-                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}}</a></div>
+                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}} {{distance}}</a></div>
                 {{/to_build}}
             </div>
         </section>
