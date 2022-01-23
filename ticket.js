@@ -26,7 +26,7 @@ function ticket_to_ride() {
         }
     ];
 
-    var gamestate_version = 1;
+    var gamestate_version = 2;
     var gamestate = {
         version: gamestate_version,
         state: STATE_SELECT_MAP,
