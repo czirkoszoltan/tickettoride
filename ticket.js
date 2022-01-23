@@ -16,7 +16,7 @@ function ticket_to_ride() {
         },
         {
             name: 'NL',
-            filename: 'map-nl.json?v1',
+            filename: 'map-nl.json?v2',
             emoji: '🌷'
         },
         {
