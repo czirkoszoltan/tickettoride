@@ -11,25 +11,37 @@ function ticket_to_ride() {
     var maps = [
         {
             name: 'EU',
+            allcars: 45,
             filename: 'map-eu.json?v2',
             emoji: '🚂'
         },
         {
             name: 'NL',
+            allcars: 45,
             filename: 'map-nl.json?v2',
             emoji: '🌷'
         },
         {
+            name: 'AMS',
+            allcars: 16,
+            filename: 'map-ams.json?v1',
+            emoji: '🥦'
+        },
+        {
             name: 'USA',
+            allcars: 45,
             filename: 'map-usa.json?v1',
             emoji: '🗽'
         }
     ];
 
-    var gamestate_version = 2;
+    var gamestate_version = 3;
     var gamestate = {
         version: gamestate_version,
         state: STATE_SELECT_MAP,
+        
+        mapname: "",
+        allcars: 0,
         
         /*
          * [
@@ -163,7 +175,8 @@ function ticket_to_ride() {
                 break;
 
             case STATE_FIRST_STEP:
-                setHtml('#screen', getTemplate('#screen-first-step'));
+                var html = Mustache.render(getTemplate('#screen-first-step'), {mapname: gamestate.mapname});
+                setHtml('#screen', html);
                 break;
 
             case STATE_SELECT_TICKETS:
@@ -184,7 +197,7 @@ function ticket_to_ride() {
 
         addEventListener('#load-from-localstorage', 'click', load_from_localstorage.bind(null));
         forEach(querySelectorAll('.load-map-button'), function(element, index) {
-            addEventListener(element, 'click', event_load_map.bind(null, maps[index].filename));
+            addEventListener(element, 'click', event_load_map.bind(null, maps[index]));
         });
         addEventListener('#new-tickets-button', 'click', event_new_tickets.bind(null));
         addEventListener('#new-neighbor-ticket-button', 'click', event_new_neighbor_ticket.bind(null));
@@ -197,22 +210,24 @@ function ticket_to_ride() {
         });
     }
 
-    function event_load_map(url) {
+    function event_load_map(mapinfo) {
         function reqListener() {
             try {
                 var routes = JSON.parse(this.responseText);
             } catch (e) {
-                alert("Cannot load " + url);
+                alert("Cannot load " + mapinfo.filename);
                 return;
             }
             if (!(routes instanceof Array)) {
-                alert("Invalid file from " + url);
+                alert("Invalid file from " + mapinfo.filename);
                 return;
             }
 
             gamestate.routes = routes;
             create_data_structures();
 
+            gamestate.mapname = mapinfo.name;
+            gamestate.allcars = mapinfo.allcars;
             gamestate.state = STATE_FIRST_STEP;
             // do not save state yet, there is no useful data
             draw();
@@ -220,7 +235,7 @@ function ticket_to_ride() {
 
         var oReq = new XMLHttpRequest();
         oReq.addEventListener('load', reqListener);
-        oReq.open('GET', url);
+        oReq.open('GET', mapinfo.filename);
         oReq.send();
     }
 
@@ -286,7 +301,7 @@ function ticket_to_ride() {
     }
 
     function event_new_neighbor_ticket() {
-        var allcars = 45;
+        var allcars = gamestate.allcars;
         var length = get_built_route_length();
         if (length > allcars) {
             alert("Fix your administration!");

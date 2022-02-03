@@ -1,0 +1,354 @@
+[
+    {
+        "from": "Haringpakkerstoren",
+        "to": "Nieuwe Waal",
+        "length": 2,
+        "color": "lila",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Haringpakkerstoren",
+        "to": "Nieuwe Waal",
+        "length": 2,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Haringpakkerstoren",
+        "to": "Oude Waal",
+        "length": 4,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Haringpakkerstoren",
+        "to": "Korenmetershuisje",
+        "length": 1,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Haringpakkerstoren",
+        "to": "Korenmetershuisje",
+        "length": 1,
+        "color": "piros",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Haringpakkerstoren",
+        "to": "Noordermarkt",
+        "length": 3,
+        "color": "kek",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Nieuwe Waal",
+        "to": "Noordermarkt",
+        "length": 2,
+        "color": "zold",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Montelbaanstoren",
+        "to": "Oude Waal",
+        "length": 2,
+        "color": "narancs",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Oude Waal",
+        "to": "Waag",
+        "length": 1,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Oude Kerk",
+        "to": "Oude Waal",
+        "length": 2,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Oude Kerk",
+        "to": "Waag",
+        "length": 1,
+        "color": "fekete",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Oude Kerk",
+        "to": "Waag",
+        "length": 1,
+        "color": "piros",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Korenmeterhuisje",
+        "to": "Oude Kerk",
+        "length": 1,
+        "color": "zold",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Korenmeterhuisje",
+        "to": "Oude Kerk",
+        "length": 1,
+        "color": "kek",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Dam",
+        "to": "Oude Kerk",
+        "length": 2,
+        "color": "lila",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Dam",
+        "to": "Oude Kerk",
+        "length": 2,
+        "color": "narancs",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Jan Roodenpoortstoren",
+        "to": "Korenmeterhuisje",
+        "length": 2,
+        "color": "narancs",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Jan Roodenpoortstoren",
+        "to": "Korenmeterhuisje",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Korenmeterhuisje",
+        "to": "Noordermarkt",
+        "length": 3,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Jordaan",
+        "to": "Noordermarkt",
+        "length": 2,
+        "color": "piros",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Jan Roodenpoortstoren",
+        "to": "Jordaan",
+        "length": 3,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Jordaan",
+        "to": "Westermarkt",
+        "length": 2,
+        "color": "narancs",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "De drie Hendricken",
+        "to": "Jordaan",
+        "length": 2,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Begijnhof",
+        "to": "De drie Hendricken",
+        "length": 4,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "De drie Hendricken",
+        "to": "Westermarkt",
+        "length": 1,
+        "color": "lila",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "De drie Hendricken",
+        "to": "Westermarkt",
+        "length": 1,
+        "color": "fekete",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Jan Roodenpoortstoren",
+        "to": "Westermarkt",
+        "length": 1,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Jan Roodenpoortstoren",
+        "to": "Westermarkt",
+        "length": 1,
+        "color": "zold",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Begijnhof",
+        "to": "Westermarkt",
+        "length": 3,
+        "color": "piros",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Begijnhof",
+        "to": "Jan Roodenpoortstoren",
+        "length": 2,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Begijnhof",
+        "to": "Munttoren",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Dam",
+        "to": "Jan Roodenpoortstoren",
+        "length": 1,
+        "color": "piros",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Dam",
+        "to": "Jan Roodenpoortstoren",
+        "length": 1,
+        "color": "kek",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Dam",
+        "to": "Oost-Indisch Huis",
+        "length": 3,
+        "color": "zold",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Dam",
+        "to": "Oost-Indisch Huis",
+        "length": 3,
+        "color": "fekete",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Blauwbrug",
+        "to": "Munttoren",
+        "length": 3,
+        "color": "kek",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Munttoren",
+        "to": "Oost-Indisch Huis",
+        "length": 2,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Blauwbrug",
+        "to": "Oost-Indisch Huis",
+        "length": 2,
+        "color": "piros",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Blauwbrug",
+        "to": "Oost-Indisch Huis",
+        "length": 2,
+        "color": "lile",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Oost-Indisch Huis",
+        "to": "Waag",
+        "length": 1,
+        "color": "kek",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Oost-Indisch Huis",
+        "to": "Waag",
+        "length": 1,
+        "color": "narancs",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Blauwbrug",
+        "to": "Montelbaanstoren",
+        "length": 4,
+        "color": "szurke",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Montelbaanstoren",
+        "to": "Waag",
+        "length": 2,
+        "color": "zold",
+        "joker": 0,
+        "tunnel": false
+    },
+    {
+        "from": "Montelbaanstoren",
+        "to": "Waag",
+        "length": 2,
+        "color": "lila",
+        "joker": 0,
+        "tunnel": false
+    }
+]
