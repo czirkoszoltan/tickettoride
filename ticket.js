@@ -25,7 +25,7 @@ function ticket_to_ride() {
             name: 'AMS',
             allcars: 16,
             filename: 'map-ams.json?v1',
-            emoji: '🥦'
+            emoji: '🚲'
         },
         {
             name: 'USA',
