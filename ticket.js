@@ -6,8 +6,6 @@ function ticket_to_ride() {
     var STATE_PLAY_GAME = 3;
     var STATE_SELECT_NEIGHBOR_TICKETS = 4;
 
-    var steamwhistle = querySelector('#steamwhistle');
-
     var maps = [
         {
             name: 'EU',
@@ -291,10 +289,17 @@ function ticket_to_ride() {
         draw();
     }
 
+    var audio = [
+        querySelector('#steamwhistle'),
+        querySelector('#steamwhistle2'),
+    ];
+    
     function event_build_ticket_click(index) {
         gamestate.to_build[index].built = gamestate.to_build[index].built ? 0 : 1;
-        if (gamestate.to_build[index].built)
-            steamwhistle.play();
+        if (gamestate.to_build[index].built) {            
+            var idx = (Math.random() * audio.length) >> 0;      // lefelé kerekít
+            audio[idx].play();
+        }
 
         save_to_localstorage();
         draw();
