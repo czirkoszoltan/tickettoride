@@ -33,6 +33,12 @@ function ticket_to_ride() {
         }
     ];
 
+    var audio = [
+        querySelector('#steamwhistle'),
+        querySelector('#steamwhistle2'),
+    ];
+    
+
     var gamestate_version = 3;
     var gamestate = {
         version: gamestate_version,
@@ -74,7 +80,6 @@ function ticket_to_ride() {
          */
         to_build: [],
     };
-    window.gamestate = gamestate;
     
     /* Array of city names, sorted alphabetically */
     var cities = [];
@@ -289,15 +294,10 @@ function ticket_to_ride() {
         draw();
     }
 
-    var audio = [
-        querySelector('#steamwhistle'),
-        querySelector('#steamwhistle2'),
-    ];
-    
     function event_build_ticket_click(index) {
         gamestate.to_build[index].built = gamestate.to_build[index].built ? 0 : 1;
-        if (gamestate.to_build[index].built) {            
-            var idx = (Math.random() * audio.length) >> 0;      // lefelé kerekít
+        if (gamestate.to_build[index].built) {
+            var idx = Math.floor((Math.random() * audio.length));
             audio[idx].play();
         }
 
