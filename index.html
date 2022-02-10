@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Ticket to Ride</title>
+    <link rel="stylesheet" href="ticket.css?v25">
+    <link rel="shortcut icon" href="favicon.png">
+    <script src="mustache.js?v1"></script>
+    <script src="ticket.js?v33"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🚂🚃🚃🚃🚃🚃</h1>
+        <div id="screen">
+        </div>
+    </div>
+    
+    <audio id="steamwhistle" src="steamwhistle.mp3"></audio>
+    <audio id="steamwhistle2" src="steamwhistle2.mp3"></audio>
+
+    <script type="text/html" id="screen-select-map">
+        <nav>
+            {{#maps}}
+            <button class="load-map-button control">{{emoji}} {{name}}</button>
+            {{/maps}}
+        </nav>
+        <nav>
+            <a id="load-from-localstorage" tabindex="0">Reload</a>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-first-step">
+        <section>
+            <h2>{{mapname}}</h2>
+        </section>
+        <nav>
+            <button id="new-tickets-button" class="control">Normal Player</button>
+            <button id="new-neighbor-ticket-button" class="control">Neutral Player</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-select-tickets">
+        <section>
+            <h2>Selected Tickets</h2>
+            <div class="build-tickets">
+                {{#to_build}}
+                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}}</a></div>
+                {{/to_build}}
+            </div>
+        </section>
+        <section>
+            <h2>Random Tickets</h2>
+            <div class="new-tickets">
+                {{#new_tickets}}
+                <div><a class="ticket-new has-after-icon" tabindex="0" data-keep="{{keep}}">{{route}} {{distance}}</a></div>
+                {{/new_tickets}}
+            </div>
+        </section>
+        <nav>
+            <button id="accept-tickets-button" class="control keep-tickets-button">Accept Tickets</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-play-game">
+        <section>
+            <h2>Selected Tickets</h2>
+            <div class="build-tickets">
+                {{#to_build}}
+                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}}</a></div>
+                {{/to_build}}
+            </div>
+        </section>
+        <nav>
+            <button id="new-tickets-button" class="control">New Tickets</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-neighbor-tickets">
+        <section>
+            <h2>Built Routes</h2>
+            <div class="build-tickets">
+                {{#to_build}}
+                <div><a class="ticket-build has-after-icon" tabindex="0" data-built="{{built}}">{{route}} {{distance}}</a></div>
+                {{/to_build}}
+            </div>
+        </section>
+        <nav>
+            <button id="new-neighbor-ticket-button" class="control">Neighbor Ticket</button>
+        </nav>
+    </script>
+</body>
+</html>
