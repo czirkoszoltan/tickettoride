@@ -11,28 +11,28 @@ document.addEventListener("DOMContentLoaded", function() {
     var maps = [
         {
             name: 'EU',
-            allcars: 45,
+            cars: 45,
             stations: 3,
             filename: 'map-eu.json?v2',
             emoji: '🚂'
         },
         {
             name: 'NL',
-            allcars: 45,
+            cars: 45,
             stations: 3,
             filename: 'map-nl.json?v2',
             emoji: '🌷'
         },
         {
             name: 'AMS',
-            allcars: 16,
+            cars: 16,
             stations: 0,
             filename: 'map-ams.json?v1',
             emoji: '🚲'
         },
         {
             name: 'USA',
-            allcars: 45,
+            cars: 45,
             stations: 3,
             filename: 'map-usa.json?v1',
             emoji: '🗽'
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     /** @type {number} */
-    var gamestate_version = 5;
+    var gamestate_version = 6;
 
     var gamestate = {
         /** @var {number} */
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
         mapname: "",
 
         /** @var {number} */
-        allcars: 0,
+        cars: 0,
 
         /** @var {number} */
         stations: 0,
@@ -118,6 +118,11 @@ document.addEventListener("DOMContentLoaded", function() {
      * {dest: 4 (index to cities array), len: 3 (length of edge)}.
      * Contains both directions, like Edinburgh -> London and London -> Edinburgh. */
     var map = [];
+
+    /* Graph of the map of double routes. Array of cities, index is city idx (see cities array).
+     * Array elements are edges, indices to other cities.
+     * Contains both directions, like Edinburgh -> London and London -> Edinburgh. */
+    var neutral_map = [];
 
     init();
 
@@ -255,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             gamestate.routes = routes;
             gamestate.mapname = mapinfo.name;
-            gamestate.allcars = mapinfo.allcars;
+            gamestate.cars = mapinfo.cars;
             gamestate.stations = mapinfo.stations;
 
             create_data_structures();
@@ -346,22 +351,22 @@ document.addEventListener("DOMContentLoaded", function() {
     function event_new_neighbor_ticket() {
         /* build strategy: randomized order. */
         if (gamestate.neutral_player_strategy.length === 0)
-            gamestate.neutral_player_strategy = neutral_player_strategy_random();
+            gamestate.neutral_player_strategy = neutral_player_strategy_bfs();
 
         var used_cars = get_built_route_length();
         var used_stations = get_built_stations_count();
-        var carsleft = gamestate.allcars - used_cars;
-        var stationsleft = gamestate.stations - used_stations;
+        var cars_left = gamestate.cars - used_cars;
+        var stations_left = gamestate.stations - used_stations;
 
-        if (carsleft < 0) {
+        if (cars_left < 0) {
             alert("Fix your administration, you cannot have " + used_cars + " cars.");
             return;
         }
-        if (stationsleft < 0) {
+        if (stations_left < 0) {
             alert("Fix your administration, you cannot have " + used_stations + " stations.");
             return;
         }
-        if (used_cars === gamestate.allcars && used_stations === gamestate.stations) {
+        if (used_cars === gamestate.cars && used_stations === gamestate.stations) {
             alert("You have no train cars and no stations left.");
             return;
         }
@@ -372,7 +377,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         /** @return boolean */
         function can_build(route) {
-            return neighbor_pair_distance(route) <= carsleft || stationsleft > 0;
+            return neighbor_pair_distance(route) <= cars_left || stations_left > 0;
         }
 
         /* find next route that can be built. remove selected route from strategy. */
@@ -425,6 +430,7 @@ document.addEventListener("DOMContentLoaded", function() {
         neighbors = create_neighbors();
         double_neighbors = create_double_neighbors();
         map = create_map();
+        neutral_map = create_neutral_map();
     }
 
     /** @return Array<string> */
@@ -525,6 +531,27 @@ document.addEventListener("DOMContentLoaded", function() {
         return map;
     }
 
+    function create_neutral_map() {
+        var map = [];
+        for (var i = 0; i < cities.length; ++i)
+            map.push([]);
+
+        for (var i = 0; i < gamestate.routes.length; ++i) {
+            var route = gamestate.routes[i];
+            if (double_neighbors.indexOf(city_pair_to_string(route.from, route.to)) < 0)
+                continue;
+            var from_idx = cities.indexOf(route.from);
+            var to_idx = cities.indexOf(route.to);
+            /* graph is unidirectional, add edge in both directions */
+            if (map[from_idx].indexOf(to_idx) < 0)
+                map[from_idx].push(to_idx);
+            if (map[to_idx].indexOf(from_idx) < 0)
+                map[to_idx].push(from_idx);
+        }
+
+        return map;
+    }
+
     function dijkstra_distance(from, to) {
         var num_cities = cities.length;
         var infinity = 1/0;
@@ -620,20 +647,18 @@ document.addEventListener("DOMContentLoaded", function() {
         return city_pair_to_string(cities[0], cities[1]);
     }
 
-    function shuffle_array(array) {
-        var currentIndex = array.length;
-
+    function shuffle_array(arr) {
         // While there remain elements to shuffle...
+        var currentIndex = arr.length;
         while (currentIndex !== 0) {
-
             // Pick a remaining element...
             var randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex--;
 
             // And swap it with the current element.
-            var temp = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temp;
+            var temp = arr[currentIndex];
+            arr[currentIndex] = arr[randomIndex];
+            arr[randomIndex] = temp;
         }
     }
 
@@ -644,5 +669,62 @@ document.addEventListener("DOMContentLoaded", function() {
             shuffled.push(double_neighbors[i]);
         shuffle_array(shuffled);
         return shuffled;
+    }
+
+    /** @return string[] */
+    function neutral_player_strategy_bfs() {
+        /** @type string[] */
+        var strategy = [];
+
+        /** @type {number[]} BFS will be started from these nodes. Contains city indices. */
+        var start = [];
+        /** @type boolean[] Element is true if city is visited. Indexed by city. */
+        var visited = [];
+        for (var i = 0; i < cities.length; ++i) {
+            visited.push(false);
+            start.push(i);
+        }
+        shuffle_array(start);
+
+        /* do the bfs from all nodes... */
+        while (start.length > 0) {
+            var start_city = start.pop();
+            /* ... but if already visited, then skip, as it was processed by previous runs */
+            if (visited[start_city])
+                continue;
+            visited[start_city] = true;
+
+            /* do the bfs */
+            /** @type number[] */
+            var front = [start_city];
+            while (front.length > 0) {
+                /** @type string[] */
+                var next_steps = [];
+                /** @type number[] */
+                var next_front = [];
+                /* for all nodes on the next level */
+                for (var f = 0; f < front.length; ++f) {
+                    var from = front[f];
+                    /* consider all edges to neighbours */
+                    for (var e = 0; e < neutral_map[from].length; ++e) {
+                        var to = neutral_map[from][e];
+                        if (!visited[to]) {
+                            visited[to] = true;
+                            /* put all neighbours to next_front */
+                            next_front.push(to);
+                            /* put route "from - to" to next steps. will be shuffled later */
+                            next_steps.push(city_pair_to_string(cities[from], cities[to]));
+                        }
+                    }
+                }
+                front = next_front;
+
+                /* put newly gathered routes to strategy */
+                shuffle_array(next_steps);
+                strategy = strategy.concat(next_steps);
+            }
+        }
+
+        return strategy;
     }
 });
