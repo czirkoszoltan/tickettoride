@@ -1,4 +1,6 @@
-function ticket_to_ride() {
+document.addEventListener("DOMContentLoaded", function() {
+    var PLAYER_TYPE_NORMAL = 'normal';
+    var PLAYER_TYPE_NEUTRAL = 'neutral';
 
     var STATE_SELECT_MAP = 0;
     var STATE_FIRST_STEP = 1;
@@ -10,24 +12,28 @@ function ticket_to_ride() {
         {
             name: 'EU',
             allcars: 45,
+            stations: 3,
             filename: 'map-eu.json?v2',
             emoji: '🚂'
         },
         {
             name: 'NL',
             allcars: 45,
+            stations: 3,
             filename: 'map-nl.json?v2',
             emoji: '🌷'
         },
         {
             name: 'AMS',
             allcars: 16,
+            stations: 0,
             filename: 'map-ams.json?v1',
             emoji: '🚲'
         },
         {
             name: 'USA',
             allcars: 45,
+            stations: 3,
             filename: 'map-usa.json?v1',
             emoji: '🗽'
         }
@@ -37,15 +43,27 @@ function ticket_to_ride() {
         querySelector('#steamwhistle'),
         querySelector('#steamwhistle2'),
     ];
-    
 
-    var gamestate_version = 3;
+    /** @type {number} */
+    var gamestate_version = 4;
+
     var gamestate = {
+        /** @var {number} */
         version: gamestate_version,
+
         state: STATE_SELECT_MAP,
-        
+
+        /** @var {GAMETYPE_NORMAL | GAMETYPE_NEUTRAL} */
+        player_type: null,
+
+        /** @var {string} */
         mapname: "",
+
+        /** @var {number} */
         allcars: 0,
+
+        /** @var {number} */
+        stations: 0,
         
         /*
          * [
@@ -74,20 +92,20 @@ function ticket_to_ride() {
         /* [
          *      {
          *          route: "Edinburgh - London",
-         *          built: 0 | 1
+         *          built: 0 (not built) | 1 (built) | 2 (station)
          *      }
          * ]
          */
         to_build: [],
     };
     
-    /* Array of city names, sorted alphabetically */
+    /** @type {string[]} Array of city names, sorted alphabetically */
     var cities = [];
 
-    /* Array of routes like "Edinburgh – London", sorted alphabetically */
+    /** @type {string[]} Array of routes like "Edinburgh – London", sorted alphabetically */
     var neighbors = [];
 
-    /* Array of neighbors like "Edinburgh – London" sorted alphabetically - only if multiple edges exist between the two cities */
+    /** @type {string[]} Array of neighbors like "Edinburgh – London" sorted alphabetically - only if multiple edges exist between the two cities */
     var double_neighbors = [];
 
     /* Graph of the map. Array of cities, index is city idx (see cities array).
@@ -101,6 +119,9 @@ function ticket_to_ride() {
     function init() {
         window.onerror = function(message, source, lineno, colno, error) {
             alert(message);
+        };
+        window.tickettoride_debug = function() {
+            return gamestate;
         };
         draw();
     }
@@ -149,6 +170,7 @@ function ticket_to_ride() {
     }
 
     function addEventListener(selector_or_element, event, func) {
+        var elements;
         if (typeof selector_or_element == 'string')
             elements = querySelectorAll(selector_or_element);
         else
@@ -231,6 +253,7 @@ function ticket_to_ride() {
 
             gamestate.mapname = mapinfo.name;
             gamestate.allcars = mapinfo.allcars;
+            gamestate.stations = mapinfo.stations;
             gamestate.state = STATE_FIRST_STEP;
             // do not save state yet, there is no useful data
             draw();
@@ -255,6 +278,7 @@ function ticket_to_ride() {
         });
 
         gamestate.state = STATE_SELECT_TICKETS;
+        gamestate.player_type = PLAYER_TYPE_NORMAL;
         save_to_localstorage();
         draw();
     }
@@ -295,7 +319,14 @@ function ticket_to_ride() {
     }
 
     function event_build_ticket_click(index) {
-        gamestate.to_build[index].built = gamestate.to_build[index].built ? 0 : 1;
+        switch (gamestate.player_type) {
+            case PLAYER_TYPE_NORMAL:
+                gamestate.to_build[index].built = gamestate.to_build[index].built ? 0 : 1;
+                break;
+            case PLAYER_TYPE_NEUTRAL:
+                gamestate.to_build[index].built = (gamestate.to_build[index].built + 1) % 3;
+                break;
+        }
         if (gamestate.to_build[index].built) {
             var idx = Math.floor((Math.random() * audio.length));
             audio[idx].play();
@@ -306,14 +337,21 @@ function ticket_to_ride() {
     }
 
     function event_new_neighbor_ticket() {
-        var allcars = gamestate.allcars;
-        var length = get_built_route_length();
-        if (length > allcars) {
-            alert("Fix your administration!");
+        var used_cars = get_built_route_length();
+        var used_stations = get_built_stations_count();
+        var carsleft = gamestate.allcars - used_cars;
+        var stationsleft = gamestate.stations - used_stations;
+
+        if (carsleft < 0) {
+            alert("Fix your administration, you cannot have " + used_cars + " cars.");
             return;
         }
-        if (length === allcars) {
-            alert("You have no train cars left.");
+        if (stationsleft < 0) {
+            alert("Fix your administration, you cannot have " + used_stations + " stations.");
+            return;
+        }
+        if (used_cars === gamestate.allcars && used_stations === gamestate.stations) {
+            alert("You have no train cars and no stations left.");
             return;
         }
         if (gamestate.to_build.length === double_neighbors.length) {
@@ -326,8 +364,10 @@ function ticket_to_ride() {
         }
 
         var avoid = get_to_build_route_names();
-        var maxlen = allcars - length;
-        var avoidfunc = function(route) { return neighbor_pair_distance(route) > maxlen; };
+        var avoidfunc = function(route) {
+            var can_build = neighbor_pair_distance(route) <= carsleft || stationsleft > 0;
+            return !can_build;
+        };
         var route = random_different_from_array(double_neighbors, 1, avoid, avoidfunc)[0];
         gamestate.to_build.push({
             route: route,
@@ -336,6 +376,7 @@ function ticket_to_ride() {
         });
 
         gamestate.state = STATE_SELECT_NEIGHBOR_TICKETS;
+        gamestate.player_type = PLAYER_TYPE_NEUTRAL;
         save_to_localstorage();
         draw();
     }
@@ -371,6 +412,7 @@ function ticket_to_ride() {
         map = create_map();
     }
 
+    /** @return Array<string> */
     function get_to_build_route_names() {
         var routes = [];
         forEach(gamestate.to_build, function(route) {
@@ -379,15 +421,27 @@ function ticket_to_ride() {
         return routes;
     }
 
+    /** @return number */
     function get_built_route_length() {
         var length = 0;
         forEach(gamestate.to_build, function(route) {
-            if (route.built)
+            if (route.built === 1)
                 length += route.distance;
         });
         return length;
     }
 
+    /** @return number */
+    function get_built_stations_count() {
+        var count = 0;
+        forEach(gamestate.to_build, function(route) {
+            if (route.built === 2)
+                count += 1;
+        });
+        return count;
+    }
+
+    /** @return Array<string> */
     function create_cities() {
         var cities = [];
 
@@ -403,6 +457,7 @@ function ticket_to_ride() {
         return cities;
     }
 
+    /** @return string[] */
     function create_neighbors() {
         var neighbors = [];
 
@@ -523,7 +578,7 @@ function ticket_to_ride() {
     function random_different_from_generator(generator, count, avoid, avoidfunc, maxretries) {
         maxretries = maxretries || count * 100;
         avoid = avoid || [];
-        avoidfunc = avoidfunc || function() { return false; };
+        avoidfunc = avoidfunc || function(elem) { return false; };
         var elements = [];
         var retry = 0;
         while (elements.length < count) {
@@ -543,7 +598,7 @@ function ticket_to_ride() {
     function random_different_from_array(source, count, avoid, avoidfunc) {
         source = [].concat(source);     // deep copy
         avoid = avoid || [];
-        avoidfunc = avoidfunc || function() { return false; };
+        avoidfunc = avoidfunc || function(elem) { return false; };
         var elements = [];
         while (source.length > 0 && elements.length < count) {
             var new_index = Math.floor(Math.random() * source.length);
@@ -568,7 +623,4 @@ function ticket_to_ride() {
         var cities = random_different_from_generator(random_city, 2);
         return city_pair_to_string(cities[0], cities[1]);
     }
-}
-
-
-document.addEventListener("DOMContentLoaded", ticket_to_ride);
+});
