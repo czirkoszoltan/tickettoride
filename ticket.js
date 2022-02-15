@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     /** @type {number} */
-    var gamestate_version = 4;
+    var gamestate_version = 5;
 
     var gamestate = {
         /** @var {number} */
@@ -88,6 +88,11 @@ document.addEventListener("DOMContentLoaded", function() {
          * ]
          */
         new_tickets: [],
+
+        /*
+         * [ "Edinburgh - London", ... ]
+         */
+        neutral_player_strategy: [],
 
         /* [
          *      {
@@ -338,6 +343,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function event_new_neighbor_ticket() {
+        /* build strategy: randomized order. */
+        if (gamestate.neutral_player_strategy.length === 0)
+            gamestate.neutral_player_strategy = neutral_player_strategy_random();
+
         var used_cars = get_built_route_length();
         var used_stations = get_built_stations_count();
         var carsleft = gamestate.allcars - used_cars;
@@ -355,21 +364,25 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("You have no train cars and no stations left.");
             return;
         }
-        if (gamestate.to_build.length === double_neighbors.length) {
-            alert("No more routes!");
-            return;
-        }
         if (gamestate.to_build.length > 0 && Math.random() < 0.2) {
             alert("No ticket for this turn 😞");
             return;
         }
 
-        var avoid = get_to_build_route_names();
-        var avoidfunc = function(route) {
-            var can_build = neighbor_pair_distance(route) <= carsleft || stationsleft > 0;
-            return !can_build;
-        };
-        var route = random_different_from_array(double_neighbors, 1, avoid, avoidfunc)[0];
+        /** @return boolean */
+        function can_build(route) {
+            return neighbor_pair_distance(route) <= carsleft || stationsleft > 0;
+        }
+
+        /* find next route that can be built. remove selected route from strategy. */
+        var i = 0;
+        while (i < gamestate.neutral_player_strategy.length && !can_build(gamestate.neutral_player_strategy[i]))
+            i += 1;
+        if (i === gamestate.neutral_player_strategy.length)
+            throw "Could not find a route to build";
+        var route = gamestate.neutral_player_strategy[i];
+        gamestate.neutral_player_strategy.splice(i, 1);
+
         gamestate.to_build.push({
             route: route,
             distance: city_pair_distance(route),
@@ -577,15 +590,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* Random ************************************************************/
 
-    function random_different_from_generator(generator, count, avoid, avoidfunc, maxretries) {
+    function random_different_from_generator(generator, count, avoid, maxretries) {
         maxretries = maxretries || count * 100;
         avoid = avoid || [];
-        avoidfunc = avoidfunc || function(elem) { return false; };
         var elements = [];
         var retry = 0;
         while (elements.length < count) {
             var new_element = generator();
-            if (elements.indexOf(new_element) === -1 && avoid.indexOf(new_element) === -1 && !avoidfunc(new_element)) {
+            if (elements.indexOf(new_element) === -1 && avoid.indexOf(new_element) === -1) {
                 elements.push(new_element);
             } else {
                 retry += 1;
@@ -593,25 +605,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     throw "Max retries reached";
                 }
             }
-        }
-        return elements;
-    }
-
-    function random_different_from_array(source, count, avoid, avoidfunc) {
-        source = [].concat(source);     // deep copy
-        avoid = avoid || [];
-        avoidfunc = avoidfunc || function(elem) { return false; };
-        var elements = [];
-        while (source.length > 0 && elements.length < count) {
-            var new_index = Math.floor(Math.random() * source.length);
-            var new_element = source[new_index];
-            source.splice(new_index, 1);
-            if (avoid.indexOf(new_element) === -1 && !avoidfunc(new_element)) {
-                elements.push(new_element);
-            }
-        }
-        if (source.length === 0 && elements.length < count) {
-            throw "Not enough elements in array";
         }
         return elements;
     }
@@ -624,5 +617,31 @@ document.addEventListener("DOMContentLoaded", function() {
     function random_city_pair() {
         var cities = random_different_from_generator(random_city, 2);
         return city_pair_to_string(cities[0], cities[1]);
+    }
+
+    function shuffle_array(array) {
+        var currentIndex = array.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex !== 0) {
+
+            // Pick a remaining element...
+            var randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            var temp = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temp;
+        }
+    }
+
+    /** @return string[] */
+    function neutral_player_strategy_random() {
+        var shuffled = [];
+        for (var i = 0; i < double_neighbors.length; ++i)
+            shuffled.push(double_neighbors[i]);
+        shuffle_array(shuffled);
+        return shuffled;
     }
 });
