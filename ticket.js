@@ -333,7 +333,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 gamestate.to_build[index].built = (gamestate.to_build[index].built + 1) % 3;
                 break;
         }
-        if (gamestate.to_build[index].built) {
+        /* play sound for built routes (but avoid sound for neutral player station) */
+        if (gamestate.to_build[index].built === 1) {
             var idx = Math.floor((Math.random() * audio.length));
             audio[idx].play();
         }
