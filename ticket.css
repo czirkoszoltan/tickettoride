@@ -56,16 +56,25 @@ nav {
 .ticket-build {
     font-size: 1.4em;
     line-height: 1.8em;
+}
+.ticket-build[data-built="0"] {
     color: #833;
 }
-.ticket-build:after {
+.ticket-build[data-built="0"]:after {
     content: "∅";
 }
 .ticket-build[data-built="1"] {
     color: #383;
 }
 .ticket-build[data-built="1"]:after {
-    content: "✔";
+    content: "✓";
+}
+.ticket-build[data-built="2"] {
+    color: #383;
+}
+.ticket-build[data-built="2"]:after {
+    content: "☗";
+    color: #111;
 }
 
 .new-tickets {
@@ -81,13 +90,13 @@ nav {
     color: #833;
 }
 .ticket-new[data-keep="0"]:after {
-    content: "✘";
+    content: "✕";
 }
 .ticket-new[data-keep="1"] {
     color: #383;
 }
 .ticket-new[data-keep="1"]:after {
-    content: "✔";
+    content: "✓";
 }
 
 button {
