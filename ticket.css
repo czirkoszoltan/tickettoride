@@ -70,11 +70,10 @@ nav {
     content: "✓";
 }
 .ticket-build[data-built="2"] {
-    color: #383;
+    color: #333;
 }
 .ticket-build[data-built="2"]:after {
-    content: "☗";
-    color: #111;
+    content: "☖";
 }
 
 .new-tickets {

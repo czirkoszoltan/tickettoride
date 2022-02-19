@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
             addEventListener(element, 'click', event_load_map.bind(null, maps[index]));
         });
         addEventListener('#new-tickets-button', 'click', event_new_tickets.bind(null));
-        addEventListener('#new-neighbor-ticket-button', 'click', event_neutral_new_ticket.bind(null));
+        addEventListener('#new-neutral-ticket-button', 'click', event_new_neutral_ticket.bind(null));
         addEventListener('#accept-tickets-button', 'click', event_accept_tickets.bind(null));
         forEach(querySelectorAll('.ticket-new'), function(element, index) {
             addEventListener(element, 'click', event_new_ticket_click.bind(null, index));
@@ -348,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function() {
         draw();
     }
 
-    function event_neutral_new_ticket() {
+    function event_new_neutral_ticket() {
         /* build strategy: randomized order. */
         if (gamestate.neutral_player_strategy.length === 0)
             gamestate.neutral_player_strategy = neutral_player_strategy_worm();
