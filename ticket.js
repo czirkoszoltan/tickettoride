@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
             addEventListener(element, 'click', event_load_map.bind(null, maps[index]));
         });
         addEventListener('#new-tickets-button', 'click', event_new_tickets.bind(null));
-        addEventListener('#new-neighbor-ticket-button', 'click', event_new_neighbor_ticket.bind(null));
+        addEventListener('#new-neighbor-ticket-button', 'click', event_neutral_new_ticket.bind(null));
         addEventListener('#accept-tickets-button', 'click', event_accept_tickets.bind(null));
         forEach(querySelectorAll('.ticket-new'), function(element, index) {
             addEventListener(element, 'click', event_new_ticket_click.bind(null, index));
@@ -348,10 +348,10 @@ document.addEventListener("DOMContentLoaded", function() {
         draw();
     }
 
-    function event_new_neighbor_ticket() {
+    function event_neutral_new_ticket() {
         /* build strategy: randomized order. */
         if (gamestate.neutral_player_strategy.length === 0)
-            gamestate.neutral_player_strategy = neutral_player_strategy_bfs();
+            gamestate.neutral_player_strategy = neutral_player_strategy_worm();
 
         var used_cars = get_built_route_length();
         var used_stations = get_built_stations_count();
@@ -722,6 +722,74 @@ document.addEventListener("DOMContentLoaded", function() {
                 /* put newly gathered routes to strategy */
                 shuffle_array(next_steps);
                 strategy = strategy.concat(next_steps);
+            }
+        }
+
+        return strategy;
+    }
+
+    /** @return string[] */
+    function neutral_player_strategy_worm() {
+        /** @type string[] */
+        var strategy = [];
+
+        /** @type {number[]} The algo will be started from these nodes. Contains city indices. */
+        var start = [];
+        /** @type boolean[] Element is true if city is visited. Indexed by city. */
+        var visited = [];
+        for (var i = 0; i < cities.length; ++i) {
+            visited.push(false);
+            start.push(i);
+        }
+        shuffle_array(start);
+
+        /** 
+         * @param {number} start_city
+         * @return {number} -1 when unable find next step
+         */
+        function find_next_from(start_city) {
+            var next = [];
+            for (var i = 0; i < neutral_map[start_city].length; ++i) {
+                var end_city = neutral_map[start_city][i];
+                if (!visited[end_city])
+                    next.push(end_city);
+            }
+            if (next.length === 0)
+                return -1;
+            var idx = Math.floor((Math.random() * next.length));
+            return next[idx];
+        }
+
+        while (start.length > 0) {
+            /* pick next start. if already visited, skip. */
+            var head_city = start.pop();
+            if (visited[head_city])
+                continue;
+            visited[head_city] = true;
+            var tail_city = head_city;
+            
+            /* grow until reaches a dead end */
+            while (head_city >= 0) {
+                /* find possible next step and try to grow */
+                var new_head_city = find_next_from(head_city);
+                if (new_head_city >= 0) {
+                    visited[new_head_city] = true;
+                    strategy.push(city_pair_to_string(cities[head_city], cities[new_head_city]));
+                    head_city = new_head_city;
+                } else {
+                    head_city = -1;
+                }
+
+                /* could not grow? try to grow end next time by swapping head_city
+                 * and tail_city (but only if tail_city is not in a dead end already).
+                 * if both directions are possible, swap randomly. */
+                if (tail_city >= 0) {
+                    if (head_city < 0 || Math.random() < 0.5) {
+                        var temp = head_city;
+                        head_city = tail_city;
+                        tail_city = temp;
+                    }
+                }
             }
         }
 
