@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     /** @type {number} */
-    var gamestate_version = 6;
+    var gamestate_version = 7;
 
     var gamestate = {
         /** @var {number} */
@@ -89,10 +89,11 @@ document.addEventListener("DOMContentLoaded", function() {
          */
         new_tickets: [],
 
-        /*
+        /**
+         * @type {(null|Array<string>)}
          * [ "Edinburgh - London", ... ]
          */
-        neutral_player_strategy: [],
+        neutral_player_strategy: null,
 
         /* [
          *      {
@@ -108,21 +109,22 @@ document.addEventListener("DOMContentLoaded", function() {
     var cities = [];
 
     /** @type {string[]} Array of routes like "Edinburgh – London", sorted alphabetically */
-    var neighbors = [];
+    var neighbors_all = [];
 
     /** @type {string[]} Array of neighbors like "Edinburgh – London" sorted alphabetically - only if multiple edges exist between the two cities */
-    var double_neighbors = [];
+    var neighbors_double = [];
 
     /* Graph of the map. Array of cities, index is city idx (see cities array).
      * Array elements are edges. Edges are objects like
      * {dest: 4 (index to cities array), len: 3 (length of edge)}.
      * Contains both directions, like Edinburgh -> London and London -> Edinburgh. */
-    var map = [];
+    var map_all = [];
 
-    /* Graph of the map of double routes. Array of cities, index is city idx (see cities array).
-     * Array elements are edges, indices to other cities.
+    /* Graph of the map, but only for double routes. Array of cities, index is city idx (see cities array).
+     * Array elements are edges. Edges are objects like
+     * {dest: 4 (index to cities array), len: 3 (length of edge)}.
      * Contains both directions, like Edinburgh -> London and London -> Edinburgh. */
-    var neutral_map = [];
+    var map_double = [];
 
     init();
 
@@ -277,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function event_new_tickets() {
-        var avoid = get_to_build_route_names().concat(neighbors);
+        var avoid = get_to_build_route_names().concat(neighbors_all);
         var new_tickets = random_different_from_generator(random_city_pair, 3, avoid);
         gamestate.new_tickets = [];
         forEach(new_tickets, function(route) {
@@ -350,10 +352,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function event_new_neutral_ticket() {
         /* build strategy: randomized order. */
-        if (gamestate.neutral_player_strategy.length === 0)
+        if (gamestate.neutral_player_strategy === null)
             gamestate.neutral_player_strategy = neutral_player_strategy_worm();
 
-        var used_cars = get_built_route_length();
+        var used_cars = get_built_route_cars_count();
         var used_stations = get_built_stations_count();
         var cars_left = gamestate.cars - used_cars;
         var stations_left = gamestate.stations - used_stations;
@@ -377,21 +379,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
         /** @return boolean */
         function can_build(route) {
-            return neighbor_pair_distance(route) <= cars_left || stations_left > 0;
+            return stations_left > 0 || neighbor_pair_distance(route) <= cars_left;
         }
 
         /* find next route that can be built. remove selected route from strategy. */
         var i = 0;
         while (i < gamestate.neutral_player_strategy.length && !can_build(gamestate.neutral_player_strategy[i]))
             i += 1;
-        if (i === gamestate.neutral_player_strategy.length)
-            throw "Could not find a route to build";
+        if (i === gamestate.neutral_player_strategy.length) {
+            alert("No more connections to build 😞");
+            return;
+        }
         var route = gamestate.neutral_player_strategy[i];
         gamestate.neutral_player_strategy.splice(i, 1);
 
         gamestate.to_build.push({
             route: route,
-            distance: city_pair_distance(route),
+            distance: neighbor_pair_distance(route),
             built: 1
         });
 
@@ -427,10 +431,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function create_data_structures() {
         cities = create_cities();
-        neighbors = create_neighbors();
-        double_neighbors = create_double_neighbors();
-        map = create_map();
-        neutral_map = create_neutral_map();
+        neighbors_all = create_all_neighbors();
+        neighbors_double = create_double_neighbors();
+        map_all = create_map(neighbors_all);
+        map_double = create_map(neighbors_double);
     }
 
     /** @return Array<string> */
@@ -443,7 +447,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /** @return number */
-    function get_built_route_length() {
+    function get_built_route_cars_count() {
         var length = 0;
         forEach(gamestate.to_build, function(route) {
             if (route.built === 1)
@@ -479,7 +483,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /** @return string[] */
-    function create_neighbors() {
+    function create_all_neighbors() {
         var neighbors = [];
 
         for (var i = 0; i < gamestate.routes.length; ++i) {
@@ -508,15 +512,36 @@ document.addEventListener("DOMContentLoaded", function() {
         return double_neighbors;
     }
 
-    function create_map() {
+    /**
+     * @param {Array} map
+     * @param {number} from_idx
+     * @param {number} to_idx
+     * @return {boolean}
+     */
+    function connection_exists_in_map(map, from_idx, to_idx) {
+        for (var j = 0; j < map[from_idx].length; ++j) {
+            if (map[from_idx][j].dest === to_idx) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function create_map(acceptable_routes) {
         var map = [];
         for (var i = 0; i < cities.length; ++i)
             map.push([]);
 
         for (var i = 0; i < gamestate.routes.length; ++i) {
             var route = gamestate.routes[i];
+            if (acceptable_routes.indexOf(city_pair_to_string(route.from, route.to)) < 0)
+                continue;
             var from_idx = cities.indexOf(route.from);
             var to_idx = cities.indexOf(route.to);
+
+            if (connection_exists_in_map(map, from_idx, to_idx))
+                continue;
+
             /* graph is unidirectional, add edge in both directions */
             map[from_idx].push({
                 "dest": to_idx,
@@ -526,27 +551,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 "dest": from_idx,
                 "len": route.length
             });
-        }
-
-        return map;
-    }
-
-    function create_neutral_map() {
-        var map = [];
-        for (var i = 0; i < cities.length; ++i)
-            map.push([]);
-
-        for (var i = 0; i < gamestate.routes.length; ++i) {
-            var route = gamestate.routes[i];
-            if (double_neighbors.indexOf(city_pair_to_string(route.from, route.to)) < 0)
-                continue;
-            var from_idx = cities.indexOf(route.from);
-            var to_idx = cities.indexOf(route.to);
-            /* graph is unidirectional, add edge in both directions */
-            if (map[from_idx].indexOf(to_idx) < 0)
-                map[from_idx].push(to_idx);
-            if (map[to_idx].indexOf(from_idx) < 0)
-                map[to_idx].push(from_idx);
         }
 
         return map;
@@ -572,7 +576,7 @@ document.addEventListener("DOMContentLoaded", function() {
         distance[from_idx] = 0;
 
         while (!visited[to_idx] && current !== -1) {
-            var edges = map[current];
+            var edges = map_all[current];
             for (var i = 0; i < edges.length; ++i) {
                 var edge = edges[i];
                 if (visited[edge.dest])
@@ -600,23 +604,20 @@ document.addEventListener("DOMContentLoaded", function() {
         return dijkstra_distance(split[0], split[1]);
     }
 
+    /** @return number */
     function neighbor_pair_distance(pair) {
-        var center = pair.indexOf("–");
-        var from = pair.substr(0, center).trim();
-        var to = pair.substr(center + 1).trim();
-        if (from > to) {
-            var temp = from;
-            from = to;
-            to = temp;
-        }
-        for (var i = 0; i < gamestate.routes.length; ++i) {
-            if (gamestate.routes[i].from === from && gamestate.routes[i].to === to)
-                return gamestate.routes[i].length;
-        }
+        var split = string_to_city_pair(pair);
+        var from_idx = cities.indexOf(split[0]);
+        var to_idx = cities.indexOf(split[1]);
+        if (from_idx < 0 || to_idx < 0)
+            throw "No such route";
+        for (var i = 0; i < map_all[from_idx].length; ++i)
+            if (map_all[from_idx][i].dest === to_idx)
+                return map_all[from_idx][i].len;
         throw "No such route";
     }
 
-    /* Random ************************************************************/
+    /* Normal player ************************************************************/
 
     function random_different_from_generator(generator, count, avoid, maxretries) {
         maxretries = maxretries || count * 100;
@@ -637,15 +638,19 @@ document.addEventListener("DOMContentLoaded", function() {
         return elements;
     }
 
+    /** @return string */
     function random_city() {
         var random_idx = Math.floor(Math.random() * cities.length);
         return cities[random_idx];
     }
 
+    /** @return string */
     function random_city_pair() {
         var cities = random_different_from_generator(random_city, 2);
         return city_pair_to_string(cities[0], cities[1]);
     }
+
+    /* Neutral player strategies ************************************************************/
 
     function shuffle_array(arr) {
         // While there remain elements to shuffle...
@@ -665,8 +670,8 @@ document.addEventListener("DOMContentLoaded", function() {
     /** @return string[] */
     function neutral_player_strategy_random() {
         var shuffled = [];
-        for (var i = 0; i < double_neighbors.length; ++i)
-            shuffled.push(double_neighbors[i]);
+        for (var i = 0; i < neighbors_double.length; ++i)
+            shuffled.push(neighbors_double[i]);
         shuffle_array(shuffled);
         return shuffled;
     }
@@ -678,7 +683,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         /** @type {number[]} BFS will be started from these nodes. Contains city indices. */
         var start = [];
-        /** @type boolean[] Element is true if city is visited. Indexed by city. */
+        /** @type {boolean[]} Element is true if city is visited. Indexed by city. */
         var visited = [];
         for (var i = 0; i < cities.length; ++i) {
             visited.push(false);
@@ -706,8 +711,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 for (var f = 0; f < front.length; ++f) {
                     var from = front[f];
                     /* consider all edges to neighbours */
-                    for (var e = 0; e < neutral_map[from].length; ++e) {
-                        var to = neutral_map[from][e];
+                    for (var e = 0; e < map_double[from].length; ++e) {
+                        var to = map_double[from][e].dest;
                         if (!visited[to]) {
                             visited[to] = true;
                             /* put all neighbours to next_front */
@@ -735,7 +740,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         /** @type {number[]} The algo will be started from these nodes. Contains city indices. */
         var start = [];
-        /** @type boolean[] Element is true if city is visited. Indexed by city. */
+        /** @type {boolean[]} Element is true if city is visited. Indexed by city. */
         var visited = [];
         for (var i = 0; i < cities.length; ++i) {
             visited.push(false);
@@ -749,8 +754,8 @@ document.addEventListener("DOMContentLoaded", function() {
          */
         function find_next_from(start_city) {
             var next = [];
-            for (var i = 0; i < neutral_map[start_city].length; ++i) {
-                var end_city = neutral_map[start_city][i];
+            for (var i = 0; i < map_double[start_city].length; ++i) {
+                var end_city = map_double[start_city][i].dest;
                 if (!visited[end_city])
                     next.push(end_city);
             }
