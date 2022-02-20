@@ -44,20 +44,20 @@ document.addEventListener("DOMContentLoaded", function() {
         querySelector('#steamwhistle2'),
     ];
 
-    /** @type {number} */
-    var gamestate_version = 7;
+    /** @type {number} Version number of game state object this code supports. */
+    var game_state_version = 7;
 
-    var gamestate = {
+    var game_state = {
         /** @var {number} */
-        version: gamestate_version,
+        version: game_state_version,
 
         state: STATE_SELECT_MAP,
 
-        /** @var {string} GAMETYPE_NORMAL | GAMETYPE_NEUTRAL */
+        /** @var {string} PLAYER_TYPE_NORMAL | PLAYER_TYPE_NEUTRAL */
         player_type: "",
 
         /** @var {string} */
-        mapname: "",
+        map_name: "",
 
         /** @var {number} */
         cars: 0,
@@ -88,6 +88,9 @@ document.addEventListener("DOMContentLoaded", function() {
          * ]
          */
         new_tickets: [],
+
+        /** @type {number} For debugging purposes */
+        neutral_player_strategy_idx: -1,
 
         /**
          * @type {(null|Array<string>)}
@@ -129,11 +132,11 @@ document.addEventListener("DOMContentLoaded", function() {
     init();
 
     function init() {
-        window.onerror = function(message, source, lineno, colno, error) {
+        window.onerror = function(message) {
             alert(message);
         };
         window.tickettoride_debug = function() {
-            return gamestate;
+            return game_state;
         };
         draw();
     }
@@ -141,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
     /* Persistence *************************************************************************/
     
     function save_to_localstorage() {
-        window.localStorage.setItem('state', JSON.stringify(gamestate));
+        window.localStorage.setItem('state', JSON.stringify(game_state));
     }
     
     function load_from_localstorage() {
@@ -155,12 +158,12 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Saved state is invalid");
             return;
         }
-        if (decoded_state.version !== gamestate_version) {
+        if (decoded_state.version !== game_state_version) {
             alert("Saved state version is too old");
             return;
         }
 
-        gamestate = decoded_state;
+        game_state = decoded_state;
         create_data_structures();
         draw();
     }
@@ -205,29 +208,29 @@ document.addEventListener("DOMContentLoaded", function() {
     /* User interface *****************************************************************/
 
     function draw() {
-        switch (gamestate.state) {
+        switch (game_state.state) {
             case STATE_SELECT_MAP:
                 var html = Mustache.render(getTemplate('#screen-select-map'), {maps: maps});
                 setHtml('#screen', html);
                 break;
 
             case STATE_FIRST_STEP:
-                var html = Mustache.render(getTemplate('#screen-first-step'), {mapname: gamestate.mapname});
+                var html = Mustache.render(getTemplate('#screen-first-step'), {mapname: game_state.map_name});
                 setHtml('#screen', html);
                 break;
 
             case STATE_SELECT_TICKETS:
-                var html = Mustache.render(getTemplate('#screen-select-tickets'), gamestate);
+                var html = Mustache.render(getTemplate('#screen-select-tickets'), game_state);
                 setHtml('#screen', html);
                 break;
 
             case STATE_PLAY_GAME:
-                var html = Mustache.render(getTemplate('#screen-play-game'), gamestate);
+                var html = Mustache.render(getTemplate('#screen-play-game'), game_state);
                 setHtml('#screen', html);
                 break;
 
             case STATE_SELECT_NEIGHBOR_TICKETS:
-                var html = Mustache.render(getTemplate('#screen-neighbor-tickets'), gamestate);
+                var html = Mustache.render(getTemplate('#screen-neighbor-tickets'), game_state);
                 setHtml('#screen', html);
                 break;
         }
@@ -260,14 +263,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            gamestate.routes = routes;
-            gamestate.mapname = mapinfo.name;
-            gamestate.cars = mapinfo.cars;
-            gamestate.stations = mapinfo.stations;
+            game_state.routes = routes;
+            game_state.map_name = mapinfo.name;
+            game_state.cars = mapinfo.cars;
+            game_state.stations = mapinfo.stations;
 
             create_data_structures();
 
-            gamestate.state = STATE_FIRST_STEP;
+            game_state.state = STATE_FIRST_STEP;
             // do not save state yet, there is no useful data
             draw();
         }
@@ -281,30 +284,30 @@ document.addEventListener("DOMContentLoaded", function() {
     function event_new_tickets() {
         var avoid = get_to_build_route_names().concat(neighbors_all);
         var new_tickets = random_different_from_generator(random_city_pair, 3, avoid);
-        gamestate.new_tickets = [];
+        game_state.new_tickets = [];
         forEach(new_tickets, function(route) {
-            gamestate.new_tickets.push({
+            game_state.new_tickets.push({
                 route: route,
                 distance: city_pair_distance(route),
                 keep: null
             })
         });
 
-        gamestate.state = STATE_SELECT_TICKETS;
-        gamestate.player_type = PLAYER_TYPE_NORMAL;
+        game_state.state = STATE_SELECT_TICKETS;
+        game_state.player_type = PLAYER_TYPE_NORMAL;
         save_to_localstorage();
         draw();
     }
 
     function event_new_ticket_click(index) {
-        gamestate.new_tickets[index].keep = gamestate.new_tickets[index].keep ? 0 : 1;
+        game_state.new_tickets[index].keep = game_state.new_tickets[index].keep ? 0 : 1;
 
         draw();
     }
 
     function event_accept_tickets() {
         var kept_count = 0;
-        forEach(gamestate.new_tickets, function(ticket) {
+        forEach(game_state.new_tickets, function(ticket) {
             if (ticket.keep) {
                 kept_count += 1;
             }
@@ -314,9 +317,9 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        forEach(gamestate.new_tickets, function(ticket) {
+        forEach(game_state.new_tickets, function(ticket) {
             if (ticket.keep) {
-                gamestate.to_build.push({
+                game_state.to_build.push({
                     route: ticket.route,
                     distance: ticket.distance,
                     built: 0
@@ -324,24 +327,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 kept_count += 1;
             }
         });
-        gamestate.new_tickets = [];
+        game_state.new_tickets = [];
 
-        gamestate.state = STATE_PLAY_GAME;
+        game_state.state = STATE_PLAY_GAME;
         save_to_localstorage();
         draw();
     }
 
     function event_build_ticket_click(index) {
-        switch (gamestate.player_type) {
+        switch (game_state.player_type) {
             case PLAYER_TYPE_NORMAL:
-                gamestate.to_build[index].built = gamestate.to_build[index].built ? 0 : 1;
+                game_state.to_build[index].built = game_state.to_build[index].built ? 0 : 1;
                 break;
             case PLAYER_TYPE_NEUTRAL:
-                gamestate.to_build[index].built = (gamestate.to_build[index].built + 1) % 3;
+                game_state.to_build[index].built = (game_state.to_build[index].built + 1) % 3;
                 break;
         }
         /* play sound for built routes (but avoid sound for neutral player station) */
-        if (gamestate.to_build[index].built === 1) {
+        if (game_state.to_build[index].built === 1) {
             var idx = Math.floor((Math.random() * audio.length));
             audio[idx].play();
         }
@@ -352,13 +355,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function event_new_neutral_ticket() {
         /* build strategy: randomized order. */
-        if (gamestate.neutral_player_strategy === null)
-            gamestate.neutral_player_strategy = neutral_player_strategy_worm();
+        if (game_state.neutral_player_strategy_idx < 0)
+            neutral_player_strategy_create();
 
         var used_cars = get_built_route_cars_count();
         var used_stations = get_built_stations_count();
-        var cars_left = gamestate.cars - used_cars;
-        var stations_left = gamestate.stations - used_stations;
+        var cars_left = game_state.cars - used_cars;
+        var stations_left = game_state.stations - used_stations;
 
         if (cars_left < 0) {
             alert("Fix your administration, you cannot have " + used_cars + " cars.");
@@ -368,11 +371,11 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Fix your administration, you cannot have " + used_stations + " stations.");
             return;
         }
-        if (used_cars === gamestate.cars && used_stations === gamestate.stations) {
+        if (used_cars === game_state.cars && used_stations === game_state.stations) {
             alert("You have no train cars and no stations left.");
             return;
         }
-        if (gamestate.to_build.length > 0 && Math.random() < 0.2) {
+        if (game_state.to_build.length > 0 && Math.random() < 0.2) {
             alert("No ticket for this turn 😞");
             return;
         }
@@ -384,23 +387,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
         /* find next route that can be built. remove selected route from strategy. */
         var i = 0;
-        while (i < gamestate.neutral_player_strategy.length && !can_build(gamestate.neutral_player_strategy[i]))
+        while (i < game_state.neutral_player_strategy.length && !can_build(game_state.neutral_player_strategy[i]))
             i += 1;
-        if (i === gamestate.neutral_player_strategy.length) {
+        if (i === game_state.neutral_player_strategy.length) {
             alert("No more connections to build 😞");
             return;
         }
-        var route = gamestate.neutral_player_strategy[i];
-        gamestate.neutral_player_strategy.splice(i, 1);
+        var route = game_state.neutral_player_strategy[i];
+        game_state.neutral_player_strategy.splice(i, 1);
 
-        gamestate.to_build.push({
+        game_state.to_build.push({
             route: route,
             distance: neighbor_pair_distance(route),
             built: 1
         });
 
-        gamestate.state = STATE_SELECT_NEIGHBOR_TICKETS;
-        gamestate.player_type = PLAYER_TYPE_NEUTRAL;
+        game_state.state = STATE_SELECT_NEIGHBOR_TICKETS;
+        game_state.player_type = PLAYER_TYPE_NEUTRAL;
         save_to_localstorage();
         draw();
     }
@@ -440,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function() {
     /** @return Array<string> */
     function get_to_build_route_names() {
         var routes = [];
-        forEach(gamestate.to_build, function(route) {
+        forEach(game_state.to_build, function(route) {
             routes.push(route.route);
         });
         return routes;
@@ -449,7 +452,7 @@ document.addEventListener("DOMContentLoaded", function() {
     /** @return number */
     function get_built_route_cars_count() {
         var length = 0;
-        forEach(gamestate.to_build, function(route) {
+        forEach(game_state.to_build, function(route) {
             if (route.built === 1)
                 length += route.distance;
         });
@@ -459,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function() {
     /** @return number */
     function get_built_stations_count() {
         var count = 0;
-        forEach(gamestate.to_build, function(route) {
+        forEach(game_state.to_build, function(route) {
             if (route.built === 2)
                 count += 1;
         });
@@ -470,8 +473,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function create_cities() {
         var cities = [];
 
-        for (var i = 0; i < gamestate.routes.length; ++i) {
-            var route = gamestate.routes[i];
+        for (var i = 0; i < game_state.routes.length; ++i) {
+            var route = game_state.routes[i];
             if (cities.indexOf(route.from) === -1)
                 cities.push(route.from);
             if (cities.indexOf(route.to) === -1)
@@ -486,8 +489,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function create_all_neighbors() {
         var neighbors = [];
 
-        for (var i = 0; i < gamestate.routes.length; ++i) {
-            var route = gamestate.routes[i];
+        for (var i = 0; i < game_state.routes.length; ++i) {
+            var route = game_state.routes[i];
             var pair_str = city_pair_to_string(route.from, route.to);
             if (neighbors.indexOf(pair_str) === -1)
                 neighbors.push(pair_str);
@@ -501,8 +504,8 @@ document.addEventListener("DOMContentLoaded", function() {
         var double_neighbors = [];
 
         var neighbors = {};
-        for (var i = 0; i < gamestate.routes.length; ++i) {
-            var route = gamestate.routes[i];
+        for (var i = 0; i < game_state.routes.length; ++i) {
+            var route = game_state.routes[i];
             var pair_str = city_pair_to_string(route.from, route.to);
             neighbors[pair_str] = (neighbors[pair_str] || 0) + 1;
             if (neighbors[pair_str] === 2)
@@ -532,8 +535,8 @@ document.addEventListener("DOMContentLoaded", function() {
         for (var i = 0; i < cities.length; ++i)
             map.push([]);
 
-        for (var i = 0; i < gamestate.routes.length; ++i) {
-            var route = gamestate.routes[i];
+        for (var i = 0; i < game_state.routes.length; ++i) {
+            var route = game_state.routes[i];
             if (acceptable_routes.indexOf(city_pair_to_string(route.from, route.to)) < 0)
                 continue;
             var from_idx = cities.indexOf(route.from);
@@ -652,6 +655,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* Neutral player strategies ************************************************************/
 
+    /** @return string[] */
+    function neutral_player_strategy_create() {
+        var strategies = [
+            function() { return neutral_player_strategy_random(neighbors_all); },
+            function() { return neutral_player_strategy_random(neighbors_double); },
+            function() { return neutral_player_strategy_bfs(map_all); },
+            function() { return neutral_player_strategy_bfs(map_double); },
+            function() { return neutral_player_strategy_worm(map_all); },
+            function() { return neutral_player_strategy_worm(map_double); },
+        ];
+        var strategy_idx = Math.floor(Math.random() * strategies.length);
+        game_state.neutral_player_strategy_idx = strategy_idx;
+        game_state.neutral_player_strategy = strategies[strategy_idx]();
+    }
+
     function shuffle_array(arr) {
         // While there remain elements to shuffle...
         var currentIndex = arr.length;
@@ -668,16 +686,19 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /** @return string[] */
-    function neutral_player_strategy_random() {
+    function neutral_player_strategy_random(connections) {
         var shuffled = [];
-        for (var i = 0; i < neighbors_double.length; ++i)
-            shuffled.push(neighbors_double[i]);
+        for (var i = 0; i < connections.length; ++i)
+            shuffled.push(connections[i]);
         shuffle_array(shuffled);
         return shuffled;
     }
 
-    /** @return string[] */
-    function neutral_player_strategy_bfs() {
+    /**
+     * @param {object[][]} map
+     * @return string[]
+     */
+    function neutral_player_strategy_bfs(map) {
         /** @type string[] */
         var strategy = [];
 
@@ -711,8 +732,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 for (var f = 0; f < front.length; ++f) {
                     var from = front[f];
                     /* consider all edges to neighbours */
-                    for (var e = 0; e < map_double[from].length; ++e) {
-                        var to = map_double[from][e].dest;
+                    for (var e = 0; e < map[from].length; ++e) {
+                        var to = map[from][e].dest;
                         if (!visited[to]) {
                             visited[to] = true;
                             /* put all neighbours to next_front */
@@ -733,8 +754,11 @@ document.addEventListener("DOMContentLoaded", function() {
         return strategy;
     }
 
-    /** @return string[] */
-    function neutral_player_strategy_worm() {
+    /**
+     * @param {object[][]} map
+     * @return string[]
+     */
+    function neutral_player_strategy_worm(map) {
         /** @type string[] */
         var strategy = [];
 
@@ -754,8 +778,8 @@ document.addEventListener("DOMContentLoaded", function() {
          */
         function find_next_from(start_city) {
             var next = [];
-            for (var i = 0; i < map_double[start_city].length; ++i) {
-                var end_city = map_double[start_city][i].dest;
+            for (var i = 0; i < map[start_city].length; ++i) {
+                var end_city = map[start_city][i].dest;
                 if (!visited[end_city])
                     next.push(end_city);
             }
