@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var STATE_FIRST_STEP = 1;
     var STATE_SELECT_TICKETS = 2;
     var STATE_PLAY_GAME = 3;
-    var STATE_SELECT_NEIGHBOR_TICKETS = 4;
+    var STATE_SELECT_NEIGHBOR_ALGORITHM = 4;
+    var STATE_SELECT_NEIGHBOR_TICKETS = 5;
 
     var maps = [
         {
@@ -45,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     /** @type {number} Version number of game state object this code supports. */
-    var game_state_version = 7;
+    var game_state_version = 8;
 
     var game_state = {
         /** @var {number} */
@@ -129,6 +130,33 @@ document.addEventListener("DOMContentLoaded", function() {
      * Contains both directions, like Edinburgh -> London and London -> Edinburgh. */
     var map_double = [];
 
+    var neutral_player_strategies = [
+        {
+            name: "Random, all",
+            alg: function() { return neutral_player_strategy_random(neighbors_all); }
+        },
+        {
+            name: "Random, double",
+            alg: function() { return neutral_player_strategy_random(neighbors_double); },
+        },
+        {
+            name: "BFS, all",
+            alg: function() { return neutral_player_strategy_bfs(map_all); },
+        },
+        {
+            name: "BFS, double",
+            alg: function() { return neutral_player_strategy_bfs(map_double); },
+        },
+        {
+            name: "DFS, all",
+            alg: function() { return neutral_player_strategy_worm(map_all); },
+        },
+        {
+            name: "DFS, double",
+            alg: function() { return neutral_player_strategy_worm(map_double); },
+        }
+    ];
+
     init();
 
     function init() {
@@ -208,32 +236,35 @@ document.addEventListener("DOMContentLoaded", function() {
     /* User interface *****************************************************************/
 
     function draw() {
+        var html;
+
         switch (game_state.state) {
             case STATE_SELECT_MAP:
-                var html = Mustache.render(getTemplate('#screen-select-map'), {maps: maps});
-                setHtml('#screen', html);
+                html = Mustache.render(getTemplate('#screen-select-map'), {maps: maps});
                 break;
 
             case STATE_FIRST_STEP:
-                var html = Mustache.render(getTemplate('#screen-first-step'), {mapname: game_state.map_name});
-                setHtml('#screen', html);
+                html = Mustache.render(getTemplate('#screen-first-step'), {mapname: game_state.map_name});
                 break;
 
             case STATE_SELECT_TICKETS:
-                var html = Mustache.render(getTemplate('#screen-select-tickets'), game_state);
-                setHtml('#screen', html);
+                html = Mustache.render(getTemplate('#screen-select-tickets'), game_state);
                 break;
 
             case STATE_PLAY_GAME:
-                var html = Mustache.render(getTemplate('#screen-play-game'), game_state);
-                setHtml('#screen', html);
+                html = Mustache.render(getTemplate('#screen-play-game'), game_state);
+                break;
+
+            case STATE_SELECT_NEIGHBOR_ALGORITHM:
+                html = Mustache.render(getTemplate('#screen-select-neighbor-algorithm'), {mapname: game_state.map_name, strategies: neutral_player_strategies});
                 break;
 
             case STATE_SELECT_NEIGHBOR_TICKETS:
-                var html = Mustache.render(getTemplate('#screen-neighbor-tickets'), game_state);
-                setHtml('#screen', html);
+                html = Mustache.render(getTemplate('#screen-neighbor-tickets'), game_state);
                 break;
         }
+
+        setHtml('#screen', html);
 
         addEventListener('#load-from-localstorage', 'click', load_from_localstorage.bind(null));
         forEach(querySelectorAll('.load-map-button'), function(element, index) {
@@ -247,6 +278,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         forEach(querySelectorAll('.ticket-build'), function(element, index) {
             addEventListener(element, 'click', event_build_ticket_click.bind(null, index));
+        });
+        addEventListener('#neutral-player-button', 'click', event_neutral_player.bind(null));
+        forEach(querySelectorAll('.select-neighbor-algorithm-button'), function(element, index) {
+            addEventListener(element, 'click', event_neutral_player_select_algorithm.bind(null, index));
         });
     }
 
@@ -349,6 +384,19 @@ document.addEventListener("DOMContentLoaded", function() {
             audio[idx].play();
         }
 
+        save_to_localstorage();
+        draw();
+    }
+
+    function event_neutral_player() {
+        game_state.state = STATE_SELECT_NEIGHBOR_ALGORITHM;
+        draw();
+    }
+
+    function event_neutral_player_select_algorithm(strategy_idx) {
+        game_state.neutral_player_strategy_idx = strategy_idx;
+        game_state.neutral_player_strategy = neutral_player_strategies[strategy_idx].alg();
+        game_state.state = STATE_SELECT_NEIGHBOR_TICKETS;
         save_to_localstorage();
         draw();
     }
@@ -657,17 +705,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** @return string[] */
     function neutral_player_strategy_create() {
-        var strategies = [
-            function() { return neutral_player_strategy_random(neighbors_all); },
-            function() { return neutral_player_strategy_random(neighbors_double); },
-            function() { return neutral_player_strategy_bfs(map_all); },
-            function() { return neutral_player_strategy_bfs(map_double); },
-            function() { return neutral_player_strategy_worm(map_all); },
-            function() { return neutral_player_strategy_worm(map_double); },
-        ];
-        var strategy_idx = Math.floor(Math.random() * strategies.length);
+        var strategy_idx = Math.floor(Math.random() * neutral_player_strategies.length);
         game_state.neutral_player_strategy_idx = strategy_idx;
-        game_state.neutral_player_strategy = strategies[strategy_idx]();
+        game_state.neutral_player_strategy = neutral_player_strategies[strategy_idx].alg();
     }
 
     function shuffle_array(arr) {

@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="favicon.png">
     <link rel="stylesheet" href="ticket.css?v28">
     <script src="mustache.js?v1"></script>
-    <script src="ticket.js?v40"></script>
+    <script src="ticket.js?v41"></script>
 </head>
 <body>
     <div class="container">
@@ -37,7 +37,7 @@
         </section>
         <nav>
             <button id="new-tickets-button" class="control">Normal Player</button>
-            <button id="new-neutral-ticket-button" class="control">Neutral Player</button>
+            <button id="neutral-player-button" class="control">Neutral Player</button>
         </nav>
     </script>
 
@@ -74,6 +74,17 @@
         </section>
         <nav>
             <button id="new-tickets-button" class="control">New Tickets</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-select-neighbor-algorithm">
+        <section>
+            <h2>{{mapname}}</h2>
+        </section>
+        <nav>
+            {{#strategies}}
+            <p><button class="select-neighbor-algorithm-button control">{{name}}</button></p>
+            {{/strategies}}
         </nav>
     </script>
 
