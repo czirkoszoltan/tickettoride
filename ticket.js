@@ -132,11 +132,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var neutral_player_strategies = [
         {
-            name: "Random",
+            name: "Surprise!",
+            alg: null   /* random */
+        },
+        {
+            name: "RND",
             alg: function() { return neutral_player_strategy_random(neighbors_double); },
         },
         {
-            name: "Random+",
+            name: "RND+",
             alg: function() { return neutral_player_strategy_random(neighbors_all); }
         },
         {
@@ -394,6 +398,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function event_neutral_player_select_algorithm(strategy_idx) {
+        /* alg = null -> pick one randomly */
+        while (neutral_player_strategies[strategy_idx].alg == null) {
+            strategy_idx = Math.floor(Math.random() * neutral_player_strategies.length);
+        }
+
         game_state.neutral_player_strategy_idx = strategy_idx;
         game_state.neutral_player_strategy = neutral_player_strategies[strategy_idx].alg();
         game_state.state = STATE_SELECT_NEIGHBOR_TICKETS;
