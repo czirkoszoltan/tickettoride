@@ -132,28 +132,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var neutral_player_strategies = [
         {
-            name: "Random, all",
-            alg: function() { return neutral_player_strategy_random(neighbors_all); }
-        },
-        {
-            name: "Random, double",
+            name: "Random",
             alg: function() { return neutral_player_strategy_random(neighbors_double); },
         },
         {
-            name: "BFS, all",
-            alg: function() { return neutral_player_strategy_bfs(map_all); },
+            name: "Random+",
+            alg: function() { return neutral_player_strategy_random(neighbors_all); }
         },
         {
-            name: "BFS, double",
+            name: "BFS",
             alg: function() { return neutral_player_strategy_bfs(map_double); },
         },
         {
-            name: "DFS, all",
-            alg: function() { return neutral_player_strategy_worm(map_all); },
+            name: "BFS+",
+            alg: function() { return neutral_player_strategy_bfs(map_all); },
         },
         {
-            name: "DFS, double",
+            name: "DFS",
             alg: function() { return neutral_player_strategy_worm(map_double); },
+        },
+        {
+            name: "DFS+",
+            alg: function() { return neutral_player_strategy_worm(map_all); },
         }
     ];
 
