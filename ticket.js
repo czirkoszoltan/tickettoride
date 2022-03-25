@@ -185,7 +185,6 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("No saved state");
             return;
         }
-        alert(json);
         var decoded_state = JSON.parse(json);
         if (typeof decoded_state !== 'object') {
             alert("Saved state is invalid");
