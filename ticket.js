@@ -152,12 +152,12 @@ document.addEventListener("DOMContentLoaded", function() {
             alg: function() { return neutral_player_strategy_bfs(map_all); },
         },
         {
-            name: "DFS",
-            alg: function() { return neutral_player_strategy_worm(map_double); },
+            name: "Walk",
+            alg: function() { return neutral_player_strategy_walk(map_double); },
         },
         {
-            name: "DFS+",
-            alg: function() { return neutral_player_strategy_worm(map_all); },
+            name: "Walk+",
+            alg: function() { return neutral_player_strategy_walk(map_all); },
         }
     ];
 
@@ -185,6 +185,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("No saved state");
             return;
         }
+        alert(json);
         var decoded_state = JSON.parse(json);
         if (typeof decoded_state !== 'object') {
             alert("Saved state is invalid");
@@ -807,7 +808,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * @param {object[][]} map
      * @return string[]
      */
-    function neutral_player_strategy_worm(map) {
+    function neutral_player_strategy_walk(map) {
         /** @type string[] */
         var strategy = [];
 
