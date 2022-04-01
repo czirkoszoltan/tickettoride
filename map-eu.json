@@ -314,7 +314,7 @@
     {
         "from": "Berlin",
         "to": "Frankfurt",
-        "length": 2,
+        "length": 3,
         "color": "fekete",
         "joker": 0,
         "tunnel": false
@@ -322,7 +322,7 @@
     {
         "from": "Berlin",
         "to": "Frankfurt",
-        "length": 2,
+        "length": 3,
         "color": "piros",
         "joker": 0,
         "tunnel": false
