@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         {
             name: "RND",
-            alg: function() { return neutral_player_strategy_random(neighbors_double); },
+            alg: function() { return neutral_player_strategy_random(neighbors_double); }
         },
         {
             name: "RND+",
@@ -145,19 +145,27 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         {
             name: "BFS",
-            alg: function() { return neutral_player_strategy_bfs(map_double); },
+            alg: function() { return neutral_player_strategy_bfs(map_double); }
         },
         {
             name: "BFS+",
-            alg: function() { return neutral_player_strategy_bfs(map_all); },
+            alg: function() { return neutral_player_strategy_bfs(map_all); }
         },
         {
             name: "Walk",
-            alg: function() { return neutral_player_strategy_walk(map_double); },
+            alg: function() { return neutral_player_strategy_walk(map_double); }
         },
         {
             name: "Walk+",
-            alg: function() { return neutral_player_strategy_walk(map_all); },
+            alg: function() { return neutral_player_strategy_walk(map_all); }
+        },
+        {
+            name: "Fill",
+            alg: function() { return neutral_player_strategy_fill(map_double); }
+        },
+        {
+            name: "Fill+",
+            alg: function() { return neutral_player_strategy_fill(map_all); }
         }
     ];
 
@@ -869,6 +877,103 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
             }
+        }
+
+        return strategy;
+    }
+
+    /**
+     * @param {object[][]} map
+     * @return string[]
+     */
+    function neutral_player_strategy_fill(map) {
+        /**
+         * @param {number} from_idx
+         * @return number[]
+         */
+        function distances_from_city(from_idx) {
+            var infinity = 1/0;
+            var visited = [];
+            var distance = [];
+            for (var i = 0; i < map.length; ++i) {
+                visited.push(false);
+                distance.push(infinity);
+            }
+
+            var current = from_idx;
+            distance[from_idx] = 0;
+
+            while (current !== -1) {
+                var edges = map[current];
+                for (var i = 0; i < edges.length; ++i) {
+                    var edge = edges[i];
+                    if (visited[edge.dest])
+                        continue;
+                    var new_dist = distance[current] + edge.len;
+                    if (new_dist < distance[edge.dest])
+                        distance[edge.dest] = new_dist;
+                }
+                visited[current] = true;
+
+                var next = -1;
+                for (var i = 0; i < map.length; ++i)
+                    if (!visited[i])
+                        if (next === -1 || distance[i] < distance[next])
+                            next = i;
+
+                current = next;
+            }
+
+            return distance;
+        }
+
+        /* select a starting city and calculate distances.
+         * make sure that the algorithm does not start from a city
+         * from which there is no way out */
+        /** @var number */
+        var start_city = -1;
+        /** @var number[] */
+        var distances = [];
+        while (true) {
+            start_city = Math.floor((Math.random() * map.length));
+            distances = distances_from_city(start_city);
+
+            var reachable = 0;
+            for (var i = 0; i < distances.length; ++i)
+                if (isFinite(distances[i]))
+                    reachable += 1;
+            if (reachable > 1)
+                break;
+        }
+
+        /* create array of edges like [from_city, to_city].
+         * sort them with distances calculated above: the closer
+         * an edge to start_city is, the sooner it will come. */
+        /** @var numeric[][] */
+        var strategy_numeric = [];
+
+        for (var i = 0; i < map.length; ++i) {
+            for (var j = 0; j < map[i].length; ++j) {
+                strategy_numeric.push([i, map[i][j].dest]);
+            }
+        }
+        strategy_numeric.sort(function(edge_a, edge_b) {
+            var dist_a = Math.min(distances[edge_a[0]], distances[edge_a[1]]);
+            var dist_b = Math.min(distances[edge_b[0]], distances[edge_b[1]]);
+            if (dist_a - dist_b === 0)
+                return Math.random() < 0.5 ? 1 : -1;
+            return dist_a - dist_b;
+        });
+
+        /* convert sorted edge list to a strategy, with strings
+         * of the edges. beware of multiple edges, add only once. */
+        /** @var string[] */
+        var strategy = [];
+
+        for (var i = 0; i < strategy_numeric.length; ++i) {
+            var route = city_pair_to_string(cities[strategy_numeric[i][0]], cities[strategy_numeric[i][1]]);
+            if (strategy.indexOf(route) < 0)
+                strategy.push(route);
         }
 
         return strategy;
