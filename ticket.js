@@ -166,6 +166,14 @@ document.addEventListener("DOMContentLoaded", function() {
         {
             name: "Fill+",
             alg: function() { return neutral_player_strategy_fill(map_all); }
+        },
+        {
+            name: "Increment",
+            alg: function() { return neutral_player_strategy_increment(map_double); }
+        },
+        {
+            name: "Increment+",
+            alg: function() { return neutral_player_strategy_increment(map_all); }
         }
     ];
 
@@ -974,6 +982,54 @@ document.addEventListener("DOMContentLoaded", function() {
             var route = city_pair_to_string(cities[strategy_numeric[i][0]], cities[strategy_numeric[i][1]]);
             if (strategy.indexOf(route) < 0)
                 strategy.push(route);
+        }
+
+        /*
+        - inkabb az egesz algot kene egy nagy ciklusba rakni: amig van nem bejart varos, addig kell csinalni, es az utvonalakat appendelni
+        - az utvonalak beszurasanal (strategy_numeric) figyelni kene arra, hogy i es map[i][j].dest varosok elerhetoek-e
+        */
+
+        return strategy;
+    }
+
+    /**
+     * @param {object[][]} map
+     * @return string[]
+     */
+    function neutral_player_strategy_increment(map) {
+        /* copy all routes to arrays, classifying them by length */
+        var maxlen = -1;
+        var routes_by_length = {};
+        for (var i = 0; i < map.length; ++i) {
+            for (var j = 0; j < map[i].length; ++j) {
+                var len = map[i][j].len;
+                if (len > maxlen)
+                    maxlen = len;
+                var routes = routes_by_length[len] || [];
+                routes.push({
+                    from: i,
+                    to: map[i][j].dest,
+                    len: map[i][j].len
+                });
+                routes_by_length[len] = routes;
+            }
+        }
+
+        /* start from max length, when copying routes to
+         * a single array. this is the whole point of the algorithm. */
+        var routes = [];
+        //for (var len = maxlen; len >= 1; --len) {
+        for (var len = 1; len <= maxlen; ++len) {
+            var arr = routes_by_length[len] || [];
+            shuffle_array(arr);
+            routes = routes.concat(arr);
+        }
+
+        var strategy = [];
+        for (var i = 0; i < routes.length; ++i) {
+            var step = city_pair_to_string(cities[routes[i].from], cities[routes[i].to]);
+            if (strategy.indexOf(step) < 0)
+                strategy.push(city_pair_to_string(cities[routes[i].from], cities[routes[i].to]));
         }
 
         return strategy;
