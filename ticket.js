@@ -935,59 +935,55 @@ document.addEventListener("DOMContentLoaded", function() {
             return distance;
         }
 
+        /** @var string[] */
+        var strategy = [];
+
+        var start_cities = [];
+        for (var i = 0; i < cities.length; ++i)
+            start_cities.push(i);
+        shuffle_array(start_cities);
+
         /* select a starting city and calculate distances.
          * make sure that the algorithm does not start from a city
          * from which there is no way out */
-        /** @var number */
-        var start_city = -1;
-        /** @var number[] */
-        var distances = [];
-        while (true) {
-            start_city = Math.floor((Math.random() * map.length));
-            distances = distances_from_city(start_city);
+        while (start_cities.length > 0) {
+            var start_city = start_cities.pop();
+            var distances = distances_from_city(start_city);
 
             var reachable = 0;
             for (var i = 0; i < distances.length; ++i)
                 if (isFinite(distances[i]))
                     reachable += 1;
-            if (reachable > 1)
-                break;
-        }
+            if (reachable < 1)
+                continue;
 
-        /* create array of edges like [from_city, to_city].
-         * sort them with distances calculated above: the closer
-         * an edge to start_city is, the sooner it will come. */
-        /** @var numeric[][] */
-        var strategy_numeric = [];
+            /* create array of edges like [from_city, to_city].
+             * sort them with distances calculated above: the closer
+             * an edge to start_city is, the sooner it will come. */
+            /** @var numeric[][] */
+            var strategy_numeric = [];
 
-        for (var i = 0; i < map.length; ++i) {
-            for (var j = 0; j < map[i].length; ++j) {
-                strategy_numeric.push([i, map[i][j].dest]);
+            for (var i = 0; i < map.length; ++i) {
+                for (var j = 0; j < map[i].length; ++j) {
+                    strategy_numeric.push([i, map[i][j].dest]);
+                }
+            }
+            strategy_numeric.sort(function (edge_a, edge_b) {
+                var dist_a = Math.min(distances[edge_a[0]], distances[edge_a[1]]);
+                var dist_b = Math.min(distances[edge_b[0]], distances[edge_b[1]]);
+                if (dist_a - dist_b === 0)
+                    return Math.random() < 0.5 ? 1 : -1;
+                return dist_a - dist_b;
+            });
+
+            /* convert sorted edge list to a strategy, with strings
+             * of the edges. beware of multiple edges, add only once. */
+            for (var i = 0; i < strategy_numeric.length; ++i) {
+                var route = city_pair_to_string(cities[strategy_numeric[i][0]], cities[strategy_numeric[i][1]]);
+                if (strategy.indexOf(route) < 0)
+                    strategy.push(route);
             }
         }
-        strategy_numeric.sort(function(edge_a, edge_b) {
-            var dist_a = Math.min(distances[edge_a[0]], distances[edge_a[1]]);
-            var dist_b = Math.min(distances[edge_b[0]], distances[edge_b[1]]);
-            if (dist_a - dist_b === 0)
-                return Math.random() < 0.5 ? 1 : -1;
-            return dist_a - dist_b;
-        });
-
-        /* convert sorted edge list to a strategy, with strings
-         * of the edges. beware of multiple edges, add only once. */
-        /** @var string[] */
-        var strategy = [];
-
-        for (var i = 0; i < strategy_numeric.length; ++i) {
-            var route = city_pair_to_string(cities[strategy_numeric[i][0]], cities[strategy_numeric[i][1]]);
-            if (strategy.indexOf(route) < 0)
-                strategy.push(route);
-        }
-
-        /*
-        - inkabb az egesz algot kene egy nagy ciklusba rakni: amig van nem bejart varos, addig kell csinalni, es az utvonalakat appendelni
-        - az utvonalak beszurasanal (strategy_numeric) figyelni kene arra, hogy i es map[i][j].dest varosok elerhetoek-e
-        */
 
         return strategy;
     }
