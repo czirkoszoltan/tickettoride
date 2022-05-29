@@ -136,11 +136,11 @@ document.addEventListener("DOMContentLoaded", function() {
             alg: null   /* random */
         },
         {
-            name: "RND",
+            name: "Random",
             alg: function() { return neutral_player_strategy_random(neighbors_double); }
         },
         {
-            name: "RND+",
+            name: "Random+",
             alg: function() { return neutral_player_strategy_random(neighbors_all); }
         },
         {
@@ -174,6 +174,14 @@ document.addEventListener("DOMContentLoaded", function() {
         {
             name: "Increment+",
             alg: function() { return neutral_player_strategy_increment(map_all); }
+        },
+        {
+            name: "Star",
+            alg: function() { return neutral_player_strategy_star(map_double); }
+        },
+        {
+            name: "Star+",
+            alg: function() { return neutral_player_strategy_star(map_all); }
         }
     ];
 
@@ -251,6 +259,10 @@ document.addEventListener("DOMContentLoaded", function() {
         forEach(querySelectorAll(selector), function(element) {
             element.innerHTML = html;
         });
+    }
+
+    function scrollToBottom() {
+        document.documentElement.scrollTop = document.body.scrollHeight;
     }
 
     /* User interface *****************************************************************/
@@ -352,6 +364,7 @@ document.addEventListener("DOMContentLoaded", function() {
         game_state.player_type = PLAYER_TYPE_NORMAL;
         save_to_localstorage();
         draw();
+        scrollToBottom();
     }
 
     function event_new_ticket_click(index) {
@@ -479,6 +492,7 @@ document.addEventListener("DOMContentLoaded", function() {
         game_state.player_type = PLAYER_TYPE_NEUTRAL;
         save_to_localstorage();
         draw();
+        scrollToBottom();
     }
 
 
@@ -993,7 +1007,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * @return string[]
      */
     function neutral_player_strategy_increment(map) {
-        /* copy all routes to arrays, classifying them by length */
+        /* copy all routes to the arrays, classifying them by length */
         var maxlen = -1;
         var routes_by_length = {};
         for (var i = 0; i < map.length; ++i) {
@@ -1028,6 +1042,40 @@ document.addEventListener("DOMContentLoaded", function() {
                 strategy.push(city_pair_to_string(cities[routes[i].from], cities[routes[i].to]));
         }
 
+        return strategy;
+    }
+
+    /**
+     * @param {object[][]} map
+     * @return string[]
+     */
+    function neutral_player_strategy_star(map) {
+        /** @var string[] */
+        var strategy = [];
+
+        var start_cities = [];
+        for (var i = 0; i < cities.length; ++i)
+            start_cities.push(i);
+        shuffle_array(start_cities);
+
+        for (var i = 0; i < start_cities.length; ++i) {
+            var start_city = start_cities[i];
+            var routes = [];
+            for (var j = 0; j < map[start_city].length; ++j) {
+                var route = map[start_city][j];
+                routes.push(city_pair_to_string(cities[start_city], cities[route.dest]));
+            }
+            shuffle_array(routes);
+
+            /* convert sorted edge list to a strategy, with strings
+             * of the edges. beware of multiple edges, add only once. */
+            for (var j = 0; j < routes.length; ++j) {
+                if (strategy.indexOf(routes[j]) < 0)
+                    strategy.push(routes[j]);
+            }
+        }
+
+        console.log(strategy);
         return strategy;
     }
 });
