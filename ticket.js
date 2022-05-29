@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function scrollToBottom() {
-        document.documentElement.scrollTop = document.body.scrollHeight;
+        window.scrollTo(0, document.body.scrollHeight);
     }
 
     /* User interface *****************************************************************/
