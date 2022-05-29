@@ -467,15 +467,18 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         /** @return boolean */
-        function can_build(route) {
-            return stations_left > 0 || neighbor_pair_distance(route) <= cars_left;
+        function can_build_with_cars(route) {
+            return neighbor_pair_distance(route) <= cars_left;
+        }
+        function can_build_with_stations(route) {
+            return stations_left > 0;
         }
 
-        /* find next route that can be built. remove selected route from strategy. */
-        var i = 0;
-        while (i < game_state.neutral_player_strategy.length && !can_build(game_state.neutral_player_strategy[i]))
-            i += 1;
-        if (i === game_state.neutral_player_strategy.length) {
+        /* find next route that can be built. first try with cars, but if there is no solution, try with stations. */
+        var i = linear_search(game_state.neutral_player_strategy, can_build_with_cars);
+        if (i < 0)
+            i = linear_search(game_state.neutral_player_strategy, can_build_with_stations);
+        if (i < 0) {
             alert("No more connections to build 😞");
             return;
         }
@@ -747,6 +750,14 @@ document.addEventListener("DOMContentLoaded", function() {
         var strategy_idx = Math.floor(Math.random() * neutral_player_strategies.length);
         game_state.neutral_player_strategy_idx = strategy_idx;
         game_state.neutral_player_strategy = neutral_player_strategies[strategy_idx].alg();
+    }
+
+    /** @return number Index of first acceptable element in array, or -1 */
+    function linear_search(arr, accept) {
+        for (var i = 0; i < arr.length; ++i)
+            if (accept(arr[i]))
+                return i;
+        return -1;
     }
 
     function shuffle_array(arr) {
