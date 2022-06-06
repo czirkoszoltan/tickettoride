@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function() {
         querySelector('#steamwhistle2'),
     ];
 
+    var infinity = 1/0;
+
     /** @type {number} Version number of game state object this code supports. */
     var game_state_version = 8;
 
@@ -182,6 +184,22 @@ document.addEventListener("DOMContentLoaded", function() {
         {
             name: "Star+",
             alg: function() { return neutral_player_strategy_star(map_all); }
+        },
+        {
+            name: "Lines",
+            alg: function() { return neutral_player_strategy_lines(map_double, false); }
+        },
+        {
+            name: "Lines+",
+            alg: function() { return neutral_player_strategy_lines(map_all, false); }
+        },
+        {
+            name: "LinesOpt",
+            alg: function() { return neutral_player_strategy_lines(map_double, true); }
+        },
+        {
+            name: "LinesOpt+",
+            alg: function() { return neutral_player_strategy_lines(map_all, true); }
         }
     ];
 
@@ -413,7 +431,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         /* play sound for built routes (but avoid sound for neutral player station) */
         if (game_state.to_build[index].built === 1) {
-            var idx = Math.floor((Math.random() * audio.length));
+            var idx = random_int(audio.length);
             audio[idx].play();
         }
 
@@ -429,7 +447,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function event_neutral_player_select_algorithm(strategy_idx) {
         /* alg = null -> pick one randomly */
         while (neutral_player_strategies[strategy_idx].alg == null) {
-            strategy_idx = Math.floor(Math.random() * neutral_player_strategies.length);
+            strategy_idx = random_int(neutral_player_strategies.length);
         }
 
         game_state.neutral_player_strategy_idx = strategy_idx;
@@ -470,7 +488,7 @@ document.addEventListener("DOMContentLoaded", function() {
         function can_build_with_cars(route) {
             return neighbor_pair_distance(route) <= cars_left;
         }
-        function can_build_with_stations(route) {
+        function can_build_with_stations() {
             return stations_left > 0;
         }
 
@@ -649,21 +667,71 @@ document.addEventListener("DOMContentLoaded", function() {
         return map;
     }
 
+    /** @return {number} Index of first acceptable element in array, or -1 */
+    function linear_search(arr, accept) {
+        for (var i = 0; i < arr.length; ++i)
+            if (accept(arr[i]))
+                return i;
+        return -1;
+    }
+
+    /** @return deep copy of data */
+    function copy_data_structure(data) {
+        return JSON.parse(JSON.stringify(data));
+    }
+
+    /** @return {number} 0...max-1 */
+    function random_int(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    /** In-place shuffle */
+    function shuffle_array(arr) {
+        // While there remain elements to shuffle...
+        var currentIndex = arr.length;
+        while (currentIndex !== 0) {
+            // Pick a remaining element...
+            var randomIndex = random_int(currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            var temp = arr[currentIndex];
+            arr[currentIndex] = arr[randomIndex];
+            arr[randomIndex] = temp;
+        }
+    }
+
+    /**
+     * Create array of some length filled with some value.
+     * Note that value should be immutable.
+     * @return any[]
+     */
+    function fill_array(length, value) {
+        return new Array(length).fill(value);
+    }
+
+    /**
+     * Use ++ to create values that will fill a new array.
+     * E.g. iota(5, 0) will return [0,1,2,3,4]
+     * @return any[]
+     */
+    function iota(length, start_value) {
+        var arr = [];
+        for (var i = 0; i < length; ++i)
+            arr.push(start_value++);
+        return arr;
+    }
+
     function dijkstra_distance(from, to) {
         var num_cities = cities.length;
-        var infinity = 1/0;
 
         var from_idx = cities.indexOf(from);
         var to_idx = cities.indexOf(to);
         if (from_idx === -1 || to_idx === -1)
             throw "No such city";
 
-        var visited = [];
-        var distance = [];
-        for (var i = 0; i < num_cities; ++i) {
-            visited.push(false);
-            distance.push(infinity);
-        }
+        var visited = fill_array(num_cities, false);
+        var distance = fill_array(num_cities, infinity);
 
         var current = from_idx;
         distance[from_idx] = 0;
@@ -733,7 +801,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** @return string */
     function random_city() {
-        var random_idx = Math.floor(Math.random() * cities.length);
+        var random_idx = random_int(cities.length);
         return cities[random_idx];
     }
 
@@ -747,39 +815,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /** @return string[] */
     function neutral_player_strategy_create() {
-        var strategy_idx = Math.floor(Math.random() * neutral_player_strategies.length);
+        var strategy_idx = random_int(neutral_player_strategies.length);
         game_state.neutral_player_strategy_idx = strategy_idx;
         game_state.neutral_player_strategy = neutral_player_strategies[strategy_idx].alg();
     }
 
-    /** @return number Index of first acceptable element in array, or -1 */
-    function linear_search(arr, accept) {
-        for (var i = 0; i < arr.length; ++i)
-            if (accept(arr[i]))
-                return i;
-        return -1;
-    }
-
-    function shuffle_array(arr) {
-        // While there remain elements to shuffle...
-        var currentIndex = arr.length;
-        while (currentIndex !== 0) {
-            // Pick a remaining element...
-            var randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-
-            // And swap it with the current element.
-            var temp = arr[currentIndex];
-            arr[currentIndex] = arr[randomIndex];
-            arr[randomIndex] = temp;
-        }
-    }
-
     /** @return string[] */
     function neutral_player_strategy_random(connections) {
-        var shuffled = [];
-        for (var i = 0; i < connections.length; ++i)
-            shuffled.push(connections[i]);
+        var shuffled = copy_data_structure(connections);
         shuffle_array(shuffled);
         return shuffled;
     }
@@ -795,9 +838,8 @@ document.addEventListener("DOMContentLoaded", function() {
         /** @type {number[]} BFS will be started from these nodes. Contains city indices. */
         var start = [];
         /** @type {boolean[]} Element is true if city is visited. Indexed by city. */
-        var visited = [];
+        var visited = fill_array(cities.length, false);
         for (var i = 0; i < cities.length; ++i) {
-            visited.push(false);
             start.push(i);
         }
         shuffle_array(start);
@@ -853,14 +895,10 @@ document.addEventListener("DOMContentLoaded", function() {
         var strategy = [];
 
         /** @type {number[]} The algo will be started from these nodes. Contains city indices. */
-        var start = [];
-        /** @type {boolean[]} Element is true if city is visited. Indexed by city. */
-        var visited = [];
-        for (var i = 0; i < cities.length; ++i) {
-            visited.push(false);
-            start.push(i);
-        }
+        var start = iota(cities.length, 0);
         shuffle_array(start);
+        /** @type {boolean[]} Element is true if city is visited. Indexed by city. */
+        var visited = fill_array(cities.length, false);
 
         /** 
          * @param {number} start_city
@@ -875,7 +913,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             if (next.length === 0)
                 return -1;
-            var idx = Math.floor((Math.random() * next.length));
+            var idx = random_int(next.length);
             return next[idx];
         }
 
@@ -925,20 +963,19 @@ document.addEventListener("DOMContentLoaded", function() {
          * @return number[]
          */
         function distances_from_city(from_idx) {
-            var infinity = 1/0;
-            var visited = [];
-            var distance = [];
-            for (var i = 0; i < map.length; ++i) {
-                visited.push(false);
-                distance.push(infinity);
-            }
+            /** @var {boolean[]} */
+            var visited = fill_array(map.length, false);
+            /** @var {number[]} */
+            var distance = fill_array(map.length, infinity);
 
             var current = from_idx;
             distance[from_idx] = 0;
 
             while (current !== -1) {
+                /** @var {Object[]} */
                 var edges = map[current];
                 for (var i = 0; i < edges.length; ++i) {
+                    /** @var Object */
                     var edge = edges[i];
                     if (visited[edge.dest])
                         continue;
@@ -963,9 +1000,7 @@ document.addEventListener("DOMContentLoaded", function() {
         /** @var string[] */
         var strategy = [];
 
-        var start_cities = [];
-        for (var i = 0; i < cities.length; ++i)
-            start_cities.push(i);
+        var start_cities = iota(cities.length, 0);
         shuffle_array(start_cities);
 
         /* select a starting city and calculate distances.
@@ -1036,10 +1071,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        /* start from max length, when copying routes to
-         * a single array. this is the whole point of the algorithm. */
+        /* start from min length, when copying routes to
+         * a single array. this is the main idea of the algorithm. */
         var routes = [];
-        //for (var len = maxlen; len >= 1; --len) {
         for (var len = 1; len <= maxlen; ++len) {
             var arr = routes_by_length[len] || [];
             shuffle_array(arr);
@@ -1064,9 +1098,7 @@ document.addEventListener("DOMContentLoaded", function() {
         /** @var string[] */
         var strategy = [];
 
-        var start_cities = [];
-        for (var i = 0; i < cities.length; ++i)
-            start_cities.push(i);
+        var start_cities = iota(cities.length, 0);
         shuffle_array(start_cities);
 
         for (var i = 0; i < start_cities.length; ++i) {
@@ -1087,6 +1119,115 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         console.log(strategy);
+        return strategy;
+    }
+
+    /**
+     * @param {object[][]} map
+     * @param {bool} opt Optimize: reuse built edges in in shortest length calc
+     * @return string[][]
+     */
+    function neutral_player_strategy_lines(map, opt) {
+        /**
+         * @param {number} from_idx
+         * @param {number} to_idx
+         * @return {Object[]} {from, to, length} tuples
+         */
+        function shortest_route(from_idx, to_idx) {
+            /** @var {boolean[]} */
+            var visited = fill_array(map.length, false);
+            /** @var {number[]} */
+            var distance = fill_array(map.length, infinity);
+            /** @var {number[]} */
+            var coming_from = fill_array(map.length, null);
+
+            var current = from_idx;
+            distance[from_idx] = 0;
+
+            while (current !== -1) {
+                var edges = map[current];
+                for (var i = 0; i < edges.length; ++i) {
+                    var edge = edges[i];
+                    if (visited[edge.dest])
+                        continue;
+                    var new_dist = distance[current] + edge.len;
+                    if (new_dist < distance[edge.dest]) {
+                        distance[edge.dest] = new_dist;
+                        coming_from[edge.dest] = current;
+                    }
+                }
+                visited[current] = true;
+
+                var next = -1;
+                for (var i = 0; i < map.length; ++i)
+                    if (!visited[i])
+                        if (next === -1 || distance[i] < distance[next])
+                            next = i;
+
+                current = next;
+            }
+
+            /** @var number[][] */
+            var route = [];
+            /** @var number */
+            var current = to_idx;
+            while (coming_from[current] != null) {
+                var from = coming_from[current];
+                var to = current;
+                var len = 0;
+                for (var i = 0; i < map[from].length; ++i)
+                    if (map[from][i].dest === to) {
+                        len = map[from][i].len;
+                        /* will be building this edge. set its length to zero
+                         * to reuse later "for free" when calculating shortest route */
+                        if (opt)
+                            map[from][i].len = 0;
+                        break;
+                    }
+                route.push({
+                    from: from,
+                    to: to,
+                    length: len
+                });
+                current = from;
+            }
+
+            return route;
+        }
+
+        /** @var string[] */
+        var strategy = [];
+        /** @var number */
+        var used_cars = 0;
+        /** @var number */
+        var attempts = 0;
+
+        /* if using the "opt" version of the algorithm, make deep copy of the map object
+         * as lengths will be overwritten with 0s */
+        if (opt)
+            map = copy_data_structure(map);
+
+        /* Limit number of attempts. "game_state.routes.length" is heuristics on the complexity of the map. */
+        while (used_cars < game_state.cars * 1.2 && attempts < game_state.routes.length) {
+            var from = random_int(map.length);
+            var to = random_int(map.length);
+            if (from === to)
+                continue;
+
+            var route = shortest_route(from, to);
+
+            for (var i = 0; i < route.length; ++i) {
+                var edge = route[i];
+                var str = city_pair_to_string(cities[edge.from], cities[edge.to]);
+                if (strategy.indexOf(str) < 0) {
+                    strategy.push(str);
+                    used_cars += edge.length;
+                }
+            }
+
+            attempts += 1;
+        }
+
         return strategy;
     }
 });
