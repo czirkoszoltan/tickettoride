@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="favicon.png">
     <link rel="stylesheet" href="ticket.css?v28">
     <script src="mustache.js?v1"></script>
-    <script src="ticket.js?v53"></script>
+    <script src="ticket.js?v54"></script>
 </head>
 <body>
     <div class="container">
@@ -82,8 +82,12 @@
             <h2>{{mapname}}</h2>
         </section>
         <nav>
+            <p><button id="surprise-neighbor-algorithm-button" class="control">Surprise!</button></p>
             {{#strategies}}
-            <p><button class="select-neighbor-algorithm-button control">{{name}}</button></p>
+              <p>
+                <button class="select-neighbor-algorithm-button control">{{left}}</button>
+                <button class="select-neighbor-algorithm-button control">{{right}}</button>
+              </p>
             {{/strategies}}
         </nav>
     </script>

@@ -134,10 +134,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var neutral_player_strategies = [
         {
-            name: "Surprise!",
-            alg: null   /* random */
-        },
-        {
             name: "Random",
             alg: function() { return neutral_player_strategy_random(neighbors_double); }
         },
@@ -306,7 +302,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 break;
 
             case STATE_SELECT_NEIGHBOR_ALGORITHM:
-                html = Mustache.render(getTemplate('#screen-select-neighbor-algorithm'), {mapname: game_state.map_name, strategies: neutral_player_strategies});
+                var strategies_double = [];
+                for (var i = 0; i < neutral_player_strategies.length; i += 2) {
+                    strategies_double.push({
+                        left: neutral_player_strategies[i].name,
+                        right: neutral_player_strategies[i + 1].name
+                    });
+                }
+                html = Mustache.render(getTemplate('#screen-select-neighbor-algorithm'), {mapname: game_state.map_name, strategies: strategies_double});
                 break;
 
             case STATE_SELECT_NEIGHBOR_TICKETS:
@@ -330,6 +333,7 @@ document.addEventListener("DOMContentLoaded", function() {
             addEventListener(element, 'click', event_build_ticket_click.bind(null, index));
         });
         addEventListener('#neutral-player-button', 'click', event_neutral_player.bind(null));
+        addEventListener('#surprise-neighbor-algorithm-button', 'click', event_neutral_player_surprise_algorithm.bind(null));
         forEach(querySelectorAll('.select-neighbor-algorithm-button'), function(element, index) {
             addEventListener(element, 'click', event_neutral_player_select_algorithm.bind(null, index));
         });
@@ -445,16 +449,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function event_neutral_player_select_algorithm(strategy_idx) {
-        /* alg = null -> pick one randomly */
-        while (neutral_player_strategies[strategy_idx].alg == null) {
-            strategy_idx = random_int(neutral_player_strategies.length);
-        }
-
         game_state.neutral_player_strategy_idx = strategy_idx;
         game_state.neutral_player_strategy = neutral_player_strategies[strategy_idx].alg();
         game_state.state = STATE_SELECT_NEIGHBOR_TICKETS;
         save_to_localstorage();
         draw();
+    }
+
+    function event_neutral_player_surprise_algorithm() {
+        event_neutral_player_select_algorithm(random_int(neutral_player_strategies.length));
     }
 
     function event_new_neutral_ticket() {
