@@ -174,28 +174,28 @@ document.addEventListener("DOMContentLoaded", function() {
             alg: function() { return neutral_player_strategy_increment(map_all); }
         },
         {
-            name: "Star",
-            alg: function() { return neutral_player_strategy_star(map_double); }
+            name: "Stars",
+            alg: function() { return neutral_player_strategy_stars(map_double); }
         },
         {
-            name: "Star+",
-            alg: function() { return neutral_player_strategy_star(map_all); }
+            name: "Stars+",
+            alg: function() { return neutral_player_strategy_stars(map_all); }
         },
         {
-            name: "Lines",
-            alg: function() { return neutral_player_strategy_lines(map_double, false); }
+            name: "Shortest",
+            alg: function() { return neutral_player_strategy_shortest(map_double, false); }
         },
         {
-            name: "Lines+",
-            alg: function() { return neutral_player_strategy_lines(map_all, false); }
+            name: "Shortest+",
+            alg: function() { return neutral_player_strategy_shortest(map_all, false); }
         },
         {
-            name: "LinesOpt",
-            alg: function() { return neutral_player_strategy_lines(map_double, true); }
+            name: "ShortestOpt",
+            alg: function() { return neutral_player_strategy_shortest(map_double, true); }
         },
         {
-            name: "LinesOpt+",
-            alg: function() { return neutral_player_strategy_lines(map_all, true); }
+            name: "ShortestOpt+",
+            alg: function() { return neutral_player_strategy_shortest(map_all, true); }
         }
     ];
 
@@ -1097,7 +1097,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * @param {object[][]} map
      * @return string[]
      */
-    function neutral_player_strategy_star(map) {
+    function neutral_player_strategy_stars(map) {
         /** @var string[] */
         var strategy = [];
 
@@ -1130,7 +1130,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * @param {bool} opt Optimize: reuse built edges in in shortest length calc
      * @return string[][]
      */
-    function neutral_player_strategy_lines(map, opt) {
+    function neutral_player_strategy_shortest(map, opt) {
         /**
          * @param {number} from_idx
          * @param {number} to_idx
