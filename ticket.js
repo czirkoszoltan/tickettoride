@@ -334,6 +334,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         addEventListener('#neutral-player-button', 'click', event_neutral_player.bind(null));
         addEventListener('#surprise-neighbor-algorithm-button', 'click', event_neutral_player_surprise_algorithm.bind(null));
+        addEventListener('#surprise-norandom-neighbor-algorithm-button', 'click', event_neutral_player_surprise_norandom_algorithm.bind(null));
         forEach(querySelectorAll('.select-neighbor-algorithm-button'), function(element, index) {
             addEventListener(element, 'click', event_neutral_player_select_algorithm.bind(null, index));
         });
@@ -458,6 +459,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function event_neutral_player_surprise_algorithm() {
         event_neutral_player_select_algorithm(random_int(neutral_player_strategies.length));
+    }
+
+    function event_neutral_player_surprise_norandom_algorithm() {
+        var idx = random_int(neutral_player_strategies.length);
+        while (neutral_player_strategies[idx].random) {
+            idx = random_int(neutral_player_strategies.length);
+        }
+        event_neutral_player_select_algorithm(idx);
     }
 
     function event_new_neutral_ticket() {
@@ -1127,7 +1136,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /**
      * @param {object[][]} map
-     * @param {bool} opt Optimize: reuse built edges in in shortest length calc
+     * @param {boolean} opt Optimize: reuse built edges in in shortest length calc
      * @return string[][]
      */
     function neutral_player_strategy_shortest(map, opt) {
@@ -1210,8 +1219,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (opt)
             map = copy_data_structure(map);
 
-        /* Limit number of attempts. "game_state.routes.length" is heuristics on the complexity of the map. */
-        while (used_cars < game_state.cars * 1.2 && attempts < game_state.routes.length) {
+        /* Limit number of attempts. Both * 1.5 and game_state.routes.length are heuristics on the complexity of the map. */
+        while (used_cars < game_state.cars * 1.5 && attempts < game_state.routes.length) {
             var from = random_int(map.length);
             var to = random_int(map.length);
             if (from === to)
