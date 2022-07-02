@@ -135,67 +135,83 @@ document.addEventListener("DOMContentLoaded", function() {
     var neutral_player_strategies = [
         {
             name: "Random",
-            alg: function() { return neutral_player_strategy_random(neighbors_double); }
+            alg: function() { return neutral_player_strategy_random(neighbors_double); },
+            random: true
         },
         {
             name: "Random+",
-            alg: function() { return neutral_player_strategy_random(neighbors_all); }
+            alg: function() { return neutral_player_strategy_random(neighbors_all); },
+            random: true
         },
         {
             name: "BFS",
-            alg: function() { return neutral_player_strategy_bfs(map_double); }
+            alg: function() { return neutral_player_strategy_bfs(map_double); },
+            random: false
         },
         {
             name: "BFS+",
-            alg: function() { return neutral_player_strategy_bfs(map_all); }
+            alg: function() { return neutral_player_strategy_bfs(map_all); },
+            random: false
         },
         {
             name: "Walk",
-            alg: function() { return neutral_player_strategy_walk(map_double); }
+            alg: function() { return neutral_player_strategy_walk(map_double); },
+            random: false
         },
         {
             name: "Walk+",
-            alg: function() { return neutral_player_strategy_walk(map_all); }
+            alg: function() { return neutral_player_strategy_walk(map_all); },
+            random: false
         },
         {
             name: "Fill",
-            alg: function() { return neutral_player_strategy_fill(map_double); }
+            alg: function() { return neutral_player_strategy_fill(map_double); },
+            random: false
         },
         {
             name: "Fill+",
-            alg: function() { return neutral_player_strategy_fill(map_all); }
+            alg: function() { return neutral_player_strategy_fill(map_all); },
+            random: false
         },
         {
             name: "Increment",
-            alg: function() { return neutral_player_strategy_increment(map_double); }
+            alg: function() { return neutral_player_strategy_increment(map_double); },
+            random: false
         },
         {
             name: "Increment+",
-            alg: function() { return neutral_player_strategy_increment(map_all); }
+            alg: function() { return neutral_player_strategy_increment(map_all); },
+            random: false
         },
         {
             name: "Stars",
-            alg: function() { return neutral_player_strategy_stars(map_double); }
+            alg: function() { return neutral_player_strategy_stars(map_double); },
+            random: false
         },
         {
             name: "Stars+",
-            alg: function() { return neutral_player_strategy_stars(map_all); }
+            alg: function() { return neutral_player_strategy_stars(map_all); },
+            random: false
         },
         {
             name: "Shortest",
-            alg: function() { return neutral_player_strategy_shortest(map_double, false); }
+            alg: function() { return neutral_player_strategy_shortest(map_double, false); },
+            random: false
         },
         {
             name: "Shortest+",
-            alg: function() { return neutral_player_strategy_shortest(map_all, false); }
+            alg: function() { return neutral_player_strategy_shortest(map_all, false); },
+            random: false
         },
         {
             name: "ShortestOpt",
-            alg: function() { return neutral_player_strategy_shortest(map_double, true); }
+            alg: function() { return neutral_player_strategy_shortest(map_double, true); },
+            random: false
         },
         {
             name: "ShortestOpt+",
-            alg: function() { return neutral_player_strategy_shortest(map_all, true); }
+            alg: function() { return neutral_player_strategy_shortest(map_all, true); },
+            random: false
         }
     ];
 
@@ -458,7 +474,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function event_neutral_player_surprise_algorithm() {
-        event_neutral_player_select_algorithm(random_int(neutral_player_strategies.length));
+        var idx = random_int(neutral_player_strategies.length);
+        event_neutral_player_select_algorithm(idx);
     }
 
     function event_neutral_player_surprise_norandom_algorithm() {
