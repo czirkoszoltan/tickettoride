@@ -1,0 +1,898 @@
+[
+    {
+        "from": "Torino",
+        "to": "Svizzera occidentale",
+        "length": 3,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Bergamo",
+        "to": "Svizzera occidentale",
+        "length": 3,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Torino",
+        "to": "Francia",
+        "length": 2,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Torino",
+        "to": "Francia",
+        "length": 2,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Torino",
+        "to": "Monaco",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Monaco",
+        "to": "Genova",
+        "length": 3,
+        "color": "szurke",
+        "joker": 1
+    },
+    {
+        "from": "Torino",
+        "to": "Genova",
+        "length": 3,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Torino",
+        "to": "Genova",
+        "length": 3,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Torino",
+        "to": "Milano",
+        "length": 3,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Torino",
+        "to": "Milano",
+        "length": 3,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Genova",
+        "to": "Milano",
+        "length": 2,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Genova",
+        "to": "Milano",
+        "length": 2,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Milano",
+        "to": "Bergamo",
+        "length": 1,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Milano",
+        "to": "Bergamo",
+        "length": 1,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Milano",
+        "to": "Parma",
+        "length": 2,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Bergamo",
+        "to": "Parma",
+        "length": 2,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Genova",
+        "to": "Parma",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Genova",
+        "to": "Parma",
+        "length": 2,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Bergamo",
+        "to": "Svizzera orientale",
+        "length": 2,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Bolzano",
+        "to": "Svizzera orientale",
+        "length": 1,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Bergamo",
+        "to": "Bolzano",
+        "length": 3,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Bolzano",
+        "to": "Austria",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Bergamo",
+        "to": "Verona",
+        "length": 2,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Bergamo",
+        "to": "Verona",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Verona",
+        "to": "Bolzano",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Verona",
+        "to": "Venezia",
+        "length": 2,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Verona",
+        "to": "Venezia",
+        "length": 2,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Verona",
+        "to": "Bologna",
+        "length": 2,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Verona",
+        "to": "Bologna",
+        "length": 2,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Parma",
+        "to": "Bologna",
+        "length": 2,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Parma",
+        "to": "Bologna",
+        "length": 2,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Genova",
+        "to": "Pisa",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Genova",
+        "to": "Pisa",
+        "length": 3,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Parma",
+        "to": "Pisa",
+        "length": 2,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Parma",
+        "to": "Firenze",
+        "length": 3,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Genova",
+        "to": "Olbia",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    },
+    {
+        "from": "Genova",
+        "to": "Olbia",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    },
+    {
+        "from": "Bolzano",
+        "to": "Venezia",
+        "length": 3,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Bolzano",
+        "to": "Tarvisio",
+        "length": 4,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Tarvisio",
+        "to": "Austria",
+        "length": 1,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Tarvisio",
+        "to": "Austria",
+        "length": 1,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Tarvisio",
+        "to": "Venezia",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Tarvisio",
+        "to": "Venezia",
+        "length": 3,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Tarvisio",
+        "to": "Trieste",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Venezia",
+        "to": "Trieste",
+        "length": 3,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Venezia",
+        "to": "Trieste",
+        "length": 3,
+        "color": "szurke",
+        "joker": 1
+    },
+    {
+        "from": "Venezia",
+        "to": "Ravenna",
+        "length": 2,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Venezia",
+        "to": "Ravenna",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Bologna",
+        "to": "Ravenna",
+        "length": 1,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Bologna",
+        "to": "Ravenna",
+        "length": 1,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Bologna",
+        "to": "Firenze",
+        "length": 1,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Pisa",
+        "to": "Firenze",
+        "length": 1,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Pisa",
+        "to": "Firenze",
+        "length": 1,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Pisa",
+        "to": "Grosseto",
+        "length": 3,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Pisa",
+        "to": "Grosseto",
+        "length": 3,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Firenze",
+        "to": "Grosseto",
+        "length": 2,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Firenze",
+        "to": "Perugia",
+        "length": 2,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Firenze",
+        "to": "Ravenna",
+        "length": 2,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Ravenna",
+        "to": "Perugia",
+        "length": 3,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Ravenna",
+        "to": "Ancona",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Ravenna",
+        "to": "Ancona",
+        "length": 3,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Grosseto",
+        "to": "Perugia",
+        "length": 2,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Perugia",
+        "to": "Ancona",
+        "length": 2,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Venezia",
+        "to": "Ancona",
+        "length": 5,
+        "color": "szurke",
+        "joker": 3
+    },
+    {
+        "from": "Trieste",
+        "to": "Ancona",
+        "length": 5,
+        "color": "szurke",
+        "joker": 3
+    },
+    {
+        "from": "Olbia",
+        "to": "Sassari",
+        "length": 2,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Olbia",
+        "to": "Sassari",
+        "length": 2,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Olbia",
+        "to": "Roma",
+        "length": 4,
+        "color": "szurke",
+        "joker": 2
+    },
+    {
+        "from": "Olbia",
+        "to": "Roma",
+        "length": 4,
+        "color": "szurke",
+        "joker": 2
+    },
+    {
+        "from": "Sassari",
+        "to": "Cagliari",
+        "length": 4,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Sassari",
+        "to": "Cagliari",
+        "length": 4,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Olbia",
+        "to": "Cagliari",
+        "length": 4,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Olbia",
+        "to": "Cagliari",
+        "length": 4,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Cagliari",
+        "to": "Roma",
+        "length": 4,
+        "color": "szurke",
+        "joker": 2
+    },
+    {
+        "from": "Cagliari",
+        "to": "Palermo",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    },
+    {
+        "from": "Cagliari",
+        "to": "Palermo",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    },
+    {
+        "from": "Cagliari",
+        "to": "Napoli",
+        "length": 6,
+        "color": "szurke",
+        "joker": 3
+    },
+    {
+        "from": "Grosseto",
+        "to": "Roma",
+        "length": 3,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Grosseto",
+        "to": "Roma",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Perugia",
+        "to": "Roma",
+        "length": 3,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Perugia",
+        "to": "Pescaria",
+        "length": 4,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Pescaria",
+        "to": "Ancona",
+        "length": 3,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Pescaria",
+        "to": "Ancona",
+        "length": 3,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Roma",
+        "to": "Pescaria",
+        "length": 3,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Roma",
+        "to": "Napoli",
+        "length": 4,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Roma",
+        "to": "Napoli",
+        "length": 4,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Roma",
+        "to": "Napoli",
+        "length": 4,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Pescaria",
+        "to": "Napoli",
+        "length": 4,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Pescaria",
+        "to": "Foggia",
+        "length": 3,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Pescaria",
+        "to": "Foggia",
+        "length": 3,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Napoli",
+        "to": "Foggia",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Napoli",
+        "to": "Salerno",
+        "length": 1,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Napoli",
+        "to": "Salerno",
+        "length": 1,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Napoli",
+        "to": "Palermo",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    },
+    {
+        "from": "Napoli",
+        "to": "Palermo",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    },
+    {
+        "from": "Salerno",
+        "to": "Foggia",
+        "length": 2,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Salerno",
+        "to": "Taranto",
+        "length": 5,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Salerno",
+        "to": "Cosenza",
+        "length": 4,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Salerno",
+        "to": "Cosenza",
+        "length": 4,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Foggia",
+        "to": "Bari",
+        "length": 3,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Foggia",
+        "to": "Bari",
+        "length": 3,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Taranto",
+        "to": "Bari",
+        "length": 1,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Taranto",
+        "to": "Bari",
+        "length": 1,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Bari",
+        "to": "Lecce",
+        "length": 3,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Bari",
+        "to": "Lecce",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Lecce",
+        "to": "Taranto",
+        "length": 2,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Lecce",
+        "to": "Taranto",
+        "length": 2,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Cosenza",
+        "to": "Taranto",
+        "length": 4,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Cosenza",
+        "to": "Taranto",
+        "length": 4,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Cosenza",
+        "to": "Messina",
+        "length": 3,
+        "color": "szurke",
+        "joker": 1
+    },
+    {
+        "from": "Cosenza",
+        "to": "Messina",
+        "length": 3,
+        "color": "szurke",
+        "joker": 1
+    },
+    {
+        "from": "Salerno",
+        "to": "Messina",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    },
+    {
+        "from": "Palermo",
+        "to": "Agrigento",
+        "length": 2,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Palermo",
+        "to": "Agrigento",
+        "length": 2,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Palermo",
+        "to": "Catania",
+        "length": 4,
+        "color": "feher",
+        "joker": 0
+    },
+    {
+        "from": "Palermo",
+        "to": "Messina",
+        "length": 4,
+        "color": "piros",
+        "joker": 0
+    },
+    {
+        "from": "Palermo",
+        "to": "Messina",
+        "length": 4,
+        "color": "kek",
+        "joker": 0
+    },
+    {
+        "from": "Catania",
+        "to": "Agrigento",
+        "length": 3,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Siracusa",
+        "to": "Agrigento",
+        "length": 3,
+        "color": "zold",
+        "joker": 0
+    },
+    {
+        "from": "Siracusa",
+        "to": "Agrigento",
+        "length": 3,
+        "color": "fekete",
+        "joker": 0
+    },
+    {
+        "from": "Siracusa",
+        "to": "Catania",
+        "length": 1,
+        "color": "narancs",
+        "joker": 0
+    },
+    {
+        "from": "Catania",
+        "to": "Messina",
+        "length": 2,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Siracusa",
+        "to": "Messina",
+        "length": 3,
+        "color": "szurke",
+        "joker": 1
+    },
+    {
+        "from": "Siracusa",
+        "to": "Messina",
+        "length": 3,
+        "color": "szurke",
+        "joker": 1
+    },
+    {
+        "from": "Trieste",
+        "to": "Croazia settentrionale",
+        "length": 2,
+        "color": "sarga",
+        "joker": 0
+    },
+    {
+        "from": "Trieste",
+        "to": "Croazia settentrionale",
+        "length": 2,
+        "color": "lila",
+        "joker": 0
+    },
+    {
+        "from": "Ancona",
+        "to": "Croazia centrale",
+        "length": 4,
+        "color": "szurke",
+        "joker": 2
+    },
+    {
+        "from": "Bari",
+        "to": "Croazia meridionale",
+        "length": 7,
+        "color": "szurke",
+        "joker": 4
+    }
+]

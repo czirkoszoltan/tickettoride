@@ -32,6 +32,13 @@ document.addEventListener("DOMContentLoaded", function() {
             emoji: '🚲'
         },
         {
+            name: 'IT',
+            cars: 45,
+            stations: 3,
+            filename: 'map-it.json?v1',
+            emoji: '🍕'
+        },
+        {
             name: 'USA',
             cars: 45,
             stations: 3,
@@ -223,6 +230,15 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         window.tickettoride_debug = function() {
             return game_state;
+        };
+        window.tickettoride_debug_2 = function() {
+            return {
+                cities: cities,
+                neighbors_all: neighbors_all,
+                neighbors_double: neighbors_double,
+                map_all: map_all,
+                map_double: map_double
+            };
         };
         draw();
     }
