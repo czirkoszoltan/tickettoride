@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
             name: 'IT',
             cars: 45,
             stations: 3,
-            filename: 'map-it.json?v1',
+            filename: 'map-it.json?v2',
             emoji: '🍕'
         },
         {

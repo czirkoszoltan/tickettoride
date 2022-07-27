@@ -7,7 +7,7 @@
         "joker": 0
     },
     {
-        "from": "Bergamo",
+        "from": "Milano",
         "to": "Svizzera occidentale",
         "length": 3,
         "color": "kek",
@@ -561,20 +561,20 @@
     },
     {
         "from": "Perugia",
-        "to": "Pescaria",
+        "to": "Pescara",
         "length": 4,
         "color": "fekete",
         "joker": 0
     },
     {
-        "from": "Pescaria",
+        "from": "Pescara",
         "to": "Ancona",
         "length": 3,
         "color": "feher",
         "joker": 0
     },
     {
-        "from": "Pescaria",
+        "from": "Pescara",
         "to": "Ancona",
         "length": 3,
         "color": "piros",
@@ -582,7 +582,7 @@
     },
     {
         "from": "Roma",
-        "to": "Pescaria",
+        "to": "Pescari",
         "length": 3,
         "color": "narancs",
         "joker": 0
@@ -609,21 +609,21 @@
         "joker": 0
     },
     {
-        "from": "Pescaria",
+        "from": "Pescara",
         "to": "Napoli",
         "length": 4,
         "color": "lila",
         "joker": 0
     },
     {
-        "from": "Pescaria",
+        "from": "Pescari",
         "to": "Foggia",
         "length": 3,
         "color": "kek",
         "joker": 0
     },
     {
-        "from": "Pescaria",
+        "from": "Pescara",
         "to": "Foggia",
         "length": 3,
         "color": "sarga",
