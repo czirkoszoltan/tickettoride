@@ -98,6 +98,10 @@ nav {
     content: "✓";
 }
 
+.qr-code img {
+    margin: auto;
+}
+
 button {
     font-size: inherit;
     border: none;
@@ -112,7 +116,7 @@ button:focus {
     outline: 1px dotted #000;
 }
 
-#steamwhistle {
+audio {
     position: absolute;
     left: -9999px;
 }

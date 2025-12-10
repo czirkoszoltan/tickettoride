@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var STATE_PLAY_GAME = 3;
     var STATE_SELECT_NEIGHBOR_ALGORITHM = 4;
     var STATE_SELECT_NEIGHBOR_TICKETS = 5;
+    var STATE_QR = 6;
 
     var maps = [
         {
@@ -243,6 +244,18 @@ document.addEventListener("DOMContentLoaded", function() {
         draw();
     }
 
+    /* QR **********************************************************************************/
+
+    function show_qr_code() {
+        game_state.state = STATE_QR;
+        draw();
+    }
+
+    function select_map() {
+        game_state.state = STATE_SELECT_MAP;
+        draw();
+    }
+
     /* Persistence *************************************************************************/
     
     function save_to_localstorage() {
@@ -347,6 +360,10 @@ document.addEventListener("DOMContentLoaded", function() {
             case STATE_SELECT_NEIGHBOR_TICKETS:
                 html = Mustache.render(getTemplate('#screen-neighbor-tickets'), game_state);
                 break;
+
+            case STATE_QR:
+                html = Mustache.render(getTemplate('#screen-qr'), null);
+                break;
         }
 
         setHtml('#screen', html);
@@ -369,6 +386,11 @@ document.addEventListener("DOMContentLoaded", function() {
         addEventListener('#surprise-norandom-neighbor-algorithm-button', 'click', event_neutral_player_surprise_norandom_algorithm.bind(null));
         forEach(querySelectorAll('.select-neighbor-algorithm-button'), function(element, index) {
             addEventListener(element, 'click', event_neutral_player_select_algorithm.bind(null, index));
+        });
+        addEventListener('#show-qr-code', 'click', show_qr_code.bind(null));
+        addEventListener('#select-map-button', 'click', select_map.bind(null));
+        forEach(querySelectorAll('.qr-code'), function(element) {
+            new QRCode(element, window.location.toString());
         });
     }
 
@@ -578,7 +600,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function string_to_city_pair(pair) {
         var center = pair.indexOf("–");
-        var from = pair.substr(0, center).trim();
+        var from = pair.substring(0, center).trim();
         var to = pair.substr(center + 1).trim();
         return [from, to];
     }

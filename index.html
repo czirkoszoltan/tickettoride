@@ -6,9 +6,10 @@
     <meta name="robots" content="noindex">
     <title>Ticket to Ride</title>
     <link rel="shortcut icon" href="favicon.png">
-    <link rel="stylesheet" href="ticket.css?v28">
+    <link rel="stylesheet" href="ticket.css?v29">
     <script src="mustache.js?v1"></script>
-    <script src="ticket.js?v58"></script>
+    <script src="qrcode.js?v1"></script>
+    <script src="ticket.js?v59"></script>
 </head>
 <body>
     <div class="container">
@@ -28,6 +29,8 @@
         </nav>
         <nav>
             <a id="load-from-localstorage" tabindex="0">Reload</a>
+            &nbsp; &nbsp;
+            <a id="show-qr-code" tabindex="0">QR</a>
         </nav>
     </script>
 
@@ -106,6 +109,15 @@
         </section>
         <nav>
             <button id="new-neutral-ticket-button" class="control">New Ticket</button>
+        </nav>
+    </script>
+
+    <script type="text/html" id="screen-qr">
+        <section>
+            <div class="qr-code"></div>
+        </section>
+        <nav>
+            <button id="select-map-button" class="control">Select Map</button>
         </nav>
     </script>
 </body>
